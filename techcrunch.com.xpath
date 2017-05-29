@@ -1,0 +1,68 @@
+title: //h1[has-class("tweet-title")]
+title: //div[has-class("page-title")]//h1
+title: //head//meta[@name="sailthru.title"]/@content
+title: //div[has-class("article-body")]/div[has-class("article-title")]/h1
+
+body: //div[has-class("article-entry")]
+body: //div[has-class("topic-entry")]
+body: //div[has-class("profile-text")]
+body: //div[has-class("textwidget")]
+body: //div[has-class("content-wrapper")]
+body: //div[has-class("l-main-container")]
+
+@set_attr(src, @data-src): $body//img[@data-src]
+
+# alt to figcaption  (WIP)
+@wrap(<figure>): //img[has-class("img-hero")]
+
+<iframe>: $body//div[has-class("vdb_player")]/script
+
+cover: $body/img
+cover: //img[has-class("img-hero")]
+cover: $body/div[has-class("tc-topics-pages-company")]/img
+cover: //img[has-class("profile-img")]
+cover: $body//div[has-class("vdb_player")]/iframe
+cover: //div[has-class("featured-image")]/img
+@background_to_image: //div[has-class("background-image-container")]
+cover: $@
+
+image_url: //img[has-class("profile-img")]/@src
+image_url: //head//meta[@property="og:image"]/@content
+image_url: $cover/@src
+image_url: $cover//img/@src
+
+description: //head//meta[@name="twitter:description"]/@content
+description: $body//p[1]
+
+published_date: //head//meta[@name="sailthru.date"]/@content
+published_date: //div[has-class("byline")]//time/text()
+
+author: //div[has-class("byline")]//a[@rel="author"]/text()
+
+author_url: //div[has-class("byline")]//a[@rel="author"]/@href
+
+@remove: $body//div[has-class("native-ad-mobile")]/..
+
+<figure>: $body//div[has-class("slideshow")]/ol/li
+$pic: $@
+<figcaption>: $pic/h3[has-class("title")]
+@before_el("./.."): $pic//img
+@set_attr(src, @data-full-size-image): $pic/img
+@before_el("./.."): $body//div[has-class("slideshow")]/ol
+<slideshow>: $body//ol/figure/..
+@remove: $body//div[has-class("slideshow")]
+
+<figure>: $body//div[has-class("wp-caption")]
+<figcaption>: $@/p[has-class("wp-caption-text")]
+
+<figure>: $body//p/img/..
+<figcaption>: $body//p/em
+@before_el("./..")
+@after_el("./preceding-sibling::figure[1]/img"): $@
+
+@remove: $body//div[has-class("inset-ad")]
+@remove: $body//div[has-class("img-unit")]
+@remove: $body//div[has-class("ad-cluster-container")]
+@remove: $body//a[has-class("event-after-article")]
+@remove: $body//div[has-class("social-share")]
+@remove: $body//div[has-class("social-flw")]

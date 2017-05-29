@@ -1,0 +1,16 @@
+?path: /\d+/\d+/.+
+body:    //article
+
+title:          $body//h1
+
+published_date: //head/meta[@property="article:published_time"]/@content
+
+image_url: //head/meta[@property="og:image"]/@content
+
+channel: //head/meta[@property="tg:channel"]/@content
+
+@unsupported: $body//table
+
+@remove: $body//table
+@remove: //article/header
+@remove: //article/section[has-class("profile")]

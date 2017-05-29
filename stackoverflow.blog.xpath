@@ -1,0 +1,14 @@
+?path: /\d{4}/\d{2}/\d{2}/.*
+
+title: //h1
+
+body: //div[has-class("entry")]//div[has-class("media-padded")]
+
+
+@background_to_image: //div[has-class("hero-container__img")]
+cover
+
+author: $body//div[has-class("metadata")]//div[has-class("_textLeft")]//a/text()
+author_url: $body//div[has-class("metadata")]//div[has-class("_textLeft")]//a/@href
+
+@remove: $body//div[has-class("metadata")]

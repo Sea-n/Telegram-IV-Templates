@@ -1,0 +1,17 @@
+title: //h1[has-class("post__title")]
+
+body: //article[has-class("post")]
+
+author: //h3[has-class("post__author")]/a/text()
+
+author_url: //h3[has-class("post__author")]/a/@href
+
+published_date: //abbr[has-class("published")]/@title
+
+@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src, "https://www.youtube.com/embed/")]
+
+@prepend_to("./../../../.."): $body//table//pre
+
+@remove: $body//section[has-class("about")]
+@remove: $body//table
+@remove: $body//iframe[not(@Sean_Do_Not_Remove)]

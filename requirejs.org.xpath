@@ -1,0 +1,16 @@
+title: //div[@id="directory"]//h1
+
+body: //div[@id="content"]
+
+
+@before(<br>): $body//li//li
+@after(<br>): $body//span[has-class("line")]
+
+<blockquote>: $body//span[has-class("note")]
+
+<span>: $body//*[h1 or h2 or h3 or h4]//a[@name]
+
+<footer>: $body//div[@id="footer"]
+
+@remove: $body//div[@id="directory"]//ul[has-class("index")]
+@remove: $body//span[has-class("sectionMark")]

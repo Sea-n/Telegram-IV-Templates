@@ -1,0 +1,43 @@
+?path: /newsdetail/.*
+
+title: //h1[has-class("topic")]
+
+body: //article
+
+
+
+?path: /topicdetail\.php\?.*
+
+title: //h1[has-class("topic")]
+
+body: //div[has-class("single-post-content")][1]
+
+author: //div[has-class("fn")]/a/text()
+author_url: //div[has-class("fn")]/a/@href
+
+
+
+# Others
+# e.g., jobs.php, contactus.php.php
+?true
+
+title: //div[has-class("main")]/h2
+
+body: //div[has-class("main")]
+
+
+
+?true
+
+@unsupported: $body//embed
+@unsupported: $body//object
+@unsupported: $body//table
+@unsupported: $body//canvas
+@remove: $body//embed
+@remove: $body//object
+@remove: $body//table
+@remove: $body//canvas
+@remove: $body//div[has-class("more-info")]
+@remove: $body//div[has-class("month-select")]
+
+published_date: //head//meta[@name="article:published_time"]/@content

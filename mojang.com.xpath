@@ -1,0 +1,41 @@
+title: //header//h1[has-class("post-title")]
+title: //div[has-class("header")]//h2
+title: //h1
+
+body: //article[has-class("post-content")]
+body: //div[has-class("terms-summary")]
+body: //div[has-class("body")]
+body: //div[@id="terms-text"]
+body: //div[@id="prepaid"]
+
+cover: //div[has-class("post-header__image")]//iframe
+cover: //div[has-class("post-header__image")]//img
+cover: //figure[has-class("img-overflow") and not(has-class("game-divider"))]//img
+cover: $body/img
+
+image_url: $cover//img/@src
+
+@set_attrs("width", "", "height", ""): //div[has-class("mojang-embed")]//iframe
+
+@clone: //header//p[has-class("post-meta")]
+@match(" by (.*)", 1): $@
+author: $@/text()
+
+@match("Posted on (.*)", 1): //header//p[has-class("post-meta")][2]
+@datetime: $@
+published_date: $@
+published_date: //p[has-class("updated")]//time
+@match("Updated: (.*)", 1): //div[@id="terms-text"]//p[1]
+published_date: $@
+@remove
+
+@before(<br>): $body//li//li
+
+@remove: $body//h1[@id="about"]
+
+?path: /$
+?exists: //div[has-class("body")]//div[has-class("article")]
+?exists: //ul[has-class("post-list")]
+$title: ""
+$body: ""
+$cover: ""

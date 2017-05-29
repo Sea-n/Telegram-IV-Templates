@@ -1,0 +1,17 @@
+title: //div[has-class("main-container")]//header//h1[has-class("page-header")]
+
+description: //div[has-class("main-container")]//header//div[has-class("content-summary")]
+
+subtitle: //div[has-class("main-container")]//header//div[has-class("content-summary")]
+
+author: //span[has-class("author")]
+author_url: //span[has-class("author")]//a/@href
+
+image_url: //header//div[has-class("field-type-image")]//img/@src
+
+@wrap(<figure>): //header//div[has-class("field-type-image")]//img
+cover: $@
+
+body: //div[has-class("field-name-body")]
+
+published_date: //span[has-class("created")]

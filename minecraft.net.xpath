@@ -1,0 +1,57 @@
+title: //div[has-class("article-paragraph--header")]//h1
+title: //h2[has-class("blog_post_title")]
+
+subtitle: //div[has-class("article-paragraph--header")]//p
+
+body: //div[has-class("article-body")]
+body: //div[has-class("blog_article")]
+#body: //div[has-class("article-paragraph--video")]
+#@debug: $body
+
+cover: //img[has-class("article-head__image")]
+
+author: //dl[has-class("article-attribution__dl")]/dd[1]/text()
+
+author_url: //div[has-class("article-attribution")]/a/@href
+
+published_date: //head//meta[@property="article:published_time"]/@content
+published_date: //dl[has-class("article-attribution__dl")]/dd[2]/text()
+
+
+<figure>: $body//div[has-class("slick-slide")]
+<slideshow>: $body//div[has-class("article-image-carousel")]
+
+
+## iframe
+
+# youtube
+@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src,"http://www.youtube.com/embed/")]
+@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src,"https://www.youtube.com/embed/")]
+<iframe>: $body//div[has-class("youtube-player")]
+@set_attr(src, "https://www.youtube.com/embed/", @data-youtube-id)
+@set_attr(Sean_Do_Not_Remove, "true")
+
+# twitter-tweet
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
+  Sean_Do_Not_Remove, "true" \
+): $body//blockquote[has-class("twitter-tweet")]
+@remove
+
+# twitter-video
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
+  class, "twitter-video", \
+  Sean_Do_Not_Remove, "true" \
+): $body//blockquote[has-class("twitter-video")]
+@remove
+
+@remove: $body//div[has-class("article-category")]
+@remove: $body//div[has-class("article-paragraph--header")]
+@remove: $body//div[has-class("article-byline-container")]
+@remove: $body//div[has-class("return-to")]
+@remove: $body//div[has-class("title-and-share")]
+@remove: $body//div[has-class("blog_post_info")]
+@remove: $body//div[has-class("nav_arrows")]
+@remove: $body//img[@src=""]
+@remove: $body//iframe[not(@Sean_Do_Not_Remove)]

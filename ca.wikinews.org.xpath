@@ -1,0 +1,11 @@
+title: //h1[has-class("firstHeading")]
+
+body: //div[has-class("mw-content-ltr")]
+
+image_url: //div[has-class("infobox")]//div[has-class("floatnone")]//img/@src
+
+@unsupported: $body//table
+
+@remove: $body//table
+@remove: $body//span[has-class("mw-editsection")]
+@remove: $body//*[has-class("plainlinks")]

@@ -1,0 +1,27 @@
+title: //header//h1[has-class("entry-title")]
+
+body: //article//div[has-class("entry-content")]
+
+subtitle: $body/*[1]/i/..
+
+@remove: $body/p[text()="—"]
+
+
+author: //address[has-class("vcard")]/a[has-class("author")]/text()
+author: //cite[has-class("author")]/a/text()
+
+author_url: //address[has-class("vcard")]/a[has-class("author")]/@href
+author_url: //cite[has-class("author")]/a/@href
+
+published_date: //time/@datetime
+
+
+<figure>: //div[has-class("post-image-full")]
+@append_to($@): $body/p/em
+<figcaption>
+
+cover: //figure[has-class("post-image-full")]
+
+?exists: //article[2]
+title!!: null
+body!!: null

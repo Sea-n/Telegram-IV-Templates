@@ -1,0 +1,44 @@
+title: //div[has-class("content")]//h1
+title: //div[@id="content"]//h1
+
+image_url: //head//meta[@name="og:image"]/@content
+
+description: //head//meta[@name="description"]/@content[normalize-space()] 
+
+body: //div[has-class("content")]//div[@id="newstext"]
+body: //div[has-class("content")]//div[has-class("news_p")]
+body: //div[has-class("con")]
+
+@replace("(\\d{4})-(\\d\\d)-(\\d\\d)..(\\d\\d:\\d\\d)", "$1/$2/$3 $4"): //div[@id="newstext"]/span
+@datetime(+8)
+published_date
+@datetime(+8): //div[has-class("c_time")]
+published_date: $@
+
+<figure>: //div[has-class("pic600")]
+<figcaption>: $@//p
+
+@after_el("./../self::p"): $body//iframe
+
+$pic: //ul[@id="newsphoto"]
+<figure>: $pic/li/a
+<figcaption>: $pic//p
+@append_to($pic//figure): $pic//figcaption
+@append_to($body): $pic//figure
+
+@set_attrs(width, 640, height, 360): //iframe
+
+<figure>: $body//p/span[has-class("ph_b")]/..
+$figure: $body//figure
+@before_el("./../../../span"): $figure//span/img
+<figcaption>: $figure//span[has-class("ph_d")]
+@after_el("./../../img"): $figure//figcaption
+
+@remove: $body//ul[@id="newsphoto"]
+@remove: $body//span
+@remove: $body//script
+@remove: $body//div[@id="newsad"]
+@remove: $body//div[has-class("h3box")]   # sports
+@remove: $body//ul[has-class("boxTitle")]   # sports
+@remove: $body//div[has-class("boxTitle")]   # sports
+@remove: $body//img[@id="pv"]   # sports

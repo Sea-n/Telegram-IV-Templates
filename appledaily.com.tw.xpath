@@ -1,0 +1,58 @@
+title: //article//header//h1[1]
+title: //article//h1[has-class("artmht")]
+
+#body: //article//p[@id="summary"]
+body: //article//div[has-class("articulum")]
+#body: //article//p[@id="bcontent"]
+body: //div[has-class("artmtx")]
+
+@replace("(\\d+)年(\\d+)月(\\d+)日(\\d+:\\d+)?", "$1/$2/$3 $4"): //article//time
+@datetime(+8)
+published_date
+published_date: //span[has-class("artmdt")]/i/text()   # fashion
+
+author: //head//meta[@property="og:site_name"]/@content
+
+cover: //article//div[@id="rt_headpic"]//figure
+@before_el("./../../../../div"): $cover//img
+@after_el("./../../img"): $cover//p
+<figcaption>: $cover//p
+@remove: $cover//div
+cover: //figure[has-class("arthfgs")]
+
+image_url: //article//figure[has-class("lbimg")][1]//img/@src
+image_url: $cover//img/@src
+
+
+@match("var playlist_array = \\[{url: '(https?://rtnvideo1.appledaily.com.tw/.*mp4)'}", 1): //div[@id="playerVideo"]//script[1]
+video: $@
+@match("var videoUrl = '(https?://rtnvideo1.appledaily.com.tw/[^']*mp4)';", 1): //div[@id="videobox"]//script[3]
+video: $@
+@match("var videoUrl = '(https?://rtnvideo1.appledaily.com.tw/[^']*mp4)';", 1): //div[@id="rt_headpic"]//script[3]
+video: $@
+<source>: $video
+@set_attrs("src", ., "type", "video/mp4")
+@wrap(<video>)
+@prepend_to($body): $@
+
+@after(<br>): $body//span
+@append(<br>)
+
+$figure: //article//figure
+@before_el("./../../a"): $figure//img
+@after_el("./../../img"): $figure//p
+<figcaption>: $figure//p
+<figcaption>: $figure//span[@id="caption"]
+@remove: $figure//a
+@remove: $figure//div[has-class("textbox")]
+#@append_to($body): $figure
+
+@unsupported: $body//iframe
+@remove: $body//iframe
+@remove: $body//a
+@remove: $body//span[@style="color:#FF0000;"]/strong/..   # 【想知道更多，一定要看……】
+#@remove: $body//div[@id="rt_headpic"]
+#@remove: $body//section[@id="toolbar"]
+#@remove: $body//div[has-class("shrs")]
+#@remove: $body//div[has-class("gggs")]
+#@remove: $body//div[has-class("clearmen")]

@@ -1,0 +1,76 @@
+body: //div[@id="article-content-inner"]
+body: //div[has-class("post__article")]
+
+@replace("([A-Z][a-z][a-z]) (\\d\\d) ([A-Z][a-z][a-z]) (\\d{4}) (\\d\\d:\\d\\d)", "$1 $2 $4 $5"): //li[has-class("publish")]
+@datetime(+8)
+published_date
+published_date: //div[has-class("post__time")]
+
+author: //a[has-class("author-profile__name")]/text()
+author: //a[has-class("author__info__name")]/text()
+
+author_url: //a[has-class("author-profile__name")]/@href
+author_url: //a[has-class("author__info__name")]/@href
+
+#@wrap(<figure>): $body//iframe
+
+## iframe
+
+# youtube
+@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src,"http://www.youtube.com/embed/")]
+@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src,"https://www.youtube.com/embed/")]
+
+# twitter-tweet
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
+  Sean_Do_Not_Remove, "true" \
+): $body//blockquote[has-class("twitter-tweet")]
+@remove
+
+# twitter-video
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
+  class, "twitter-video", \
+  Sean_Do_Not_Remove, "true" \
+): $body//blockquote[has-class("twitter-video")]
+@remove
+
+# facebook post
+$fb_post: $body//div[has-class("fb-post")][@data-href]
+@urlencode: $fb_post/@data-href
+@set_attr(data-src, "https://www.facebook.com/plugins/post.php?href=", @data-href, "&show_text=", @data-show-text, "&width=640"): $fb_post
+@before(<iframe>, src, @data-src, Sean_Do_Not_Remove, "true"): $fb_post
+@remove
+
+# facebook video
+$fb_video: $body//div[has-class("fb-video")][@data-href]
+@urlencode: $fb_video/@data-href
+@set_attr(data-src, "https://www.facebook.com/plugins/video.php?href=", @data-href, "&show_text=", @data-show-text, "&width=640"): $fb_video
+@before(<iframe>, src, @data-src): $fb_video
+@remove
+
+# decoded facebook video
+@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src, "https://www.facebook.com/plugins/video.php?href=")]
+
+# aparat
+$aparat_video: $body//script[starts-with(@src, "https://www.aparat.com/embed/")]
+@set_attr(data-hash, @src)
+@match("^https://www.aparat.com/embed/([^?]+)", 1): $@
+@set_attr(data-src, "https://www.aparat.com/video/video/embed/videohash/", @data-hash, "\\/vt/frame"): $aparat_video
+@before(<iframe>, src, @data-src, Sean_Do_Not_Remove, "true"): $aparat_video
+@remove
+
+# instagram
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://www.instagram.com/p/\")]/@href", \
+  Sean_Do_Not_Remove, "true" \
+): $body//blockquote[has-class("instagram-media")]
+@remove
+
+# github
+<iframe>: $body//script[starts-with(@src,"https://gist.github.com/")]
+@set_attr(Sean_Do_Not_Remove, "true")
+
+@remove: $body//iframe[not(@Sean_Do_Not_Remove)]
+@remove: $body//div[has-class("article-keyword")]
+@remove: $body//div[has-class("author-profile")]
