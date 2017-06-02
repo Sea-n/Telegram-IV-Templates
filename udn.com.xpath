@@ -1,0 +1,59 @@
+title: //h1[has-class("story_art_title")]
+title: //h2[@id="story_art_title"]
+title: //div[has-class("article_topic")]
+title: //h3
+
+body: //div[@id="story_body_content"]
+body: //section[@id="story-main"]
+body: //div[has-class("story_body_content")]
+body: //main
+body: //div[@id="article_show_content"]
+body: //div[has-class("single")]
+
+
+author: //div[has-class("story_bady_info_author")]/span/text()
+author: //div[@id="story_bady_info"]/span/text()
+author: //div[has-class("story_bady_info_author")]/a/text()
+
+author_url: //div[has-class("story_bady_info_author")]/a/@href
+
+@replace("-", "/"): //time/@datetime
+@datetime(+8): //time
+published_date: $@
+
+@clone: //div[has-class("story_bady_info_author")]
+@match("\\d[0-9-]+( \\d[0-9:]+\\d)?"): //div[has-class("story_bady_info_author")][1]
+@datetime(+8): $@
+published_date: $@
+@match("\\d[0-9:]+\\d\\s+([^\\d]*)", 1): //div[has-class("story_bady_info_author")][2]
+author: $@
+
+
+published_date: //div[@id="story_bady_info"]/text()
+
+$figure: $body//p/figure
+@before_el("./.."): $figure
+@after_el("./.."): $figure/a/img
+
+@set_attr(src, @data-src): $body//img[@data-src and not(@src)]
+
+cover: $body//span/*[1]/self::figure
+
+@after(<br>): $body//li
+
+@remove: $body//div[has-class("social_bar")]
+@remove: $body//div[@id="story_bar"]
+@remove: $body//div[@id="story_bady_info"]
+@remove: $body//div[@id="story_also"]
+@remove: $body//div[has-class("story_bar")]
+@remove: $body//div[has-class("story_bady_info")]
+@remove: $body//div[has-class("story_bady_info_author")]
+@remove: $body//div[has-class("only_web")]
+@remove: $body//div[has-class("area")]
+@remove: $body//div[@id="story_tags"]
+@remove: $body//dl[@id="story_tags"]
+@remove: $body//div[has-class("keywords")]
+@remove: $body//div[has-class("img-st-more")]
+
+?exists: //div[has-class("overlay")]
+body!!: null

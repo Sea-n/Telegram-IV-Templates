@@ -1,0 +1,29 @@
+title: //h1[has-class("entry-title")]
+title: //div[has-class("postbit-posttitle")]
+
+body: //div[has-class("entry_content")]
+body: //div[has-class("post-text")]
+
+author: //a[@rel="author"]/text()
+author: //a[has-class("bigfusername")]//span/text()
+
+author_url: //a[@rel="author"]/@href
+author_url: //a[has-class("bigfusername")]/@href
+
+<figcaption>: $body//div[starts-with(@id, "attachment_")]/p
+<figure>: $@/..
+
+<slideshow>: $body/div[has-class("gallery")]
+<figure>: $body//dl[has-class("gallery-item")]
+<figcaption>: $@/dd
+
+@after(<a>, href, @src): $body//iframe[has-class("wp-embedded-content")]
+@remove
+
+cover: //div[has-class("entry_media")]//img
+cover: //img[has-class("size-full")]
+
+@remove: $body//img[not(@src)]
+
+?exists: //div[has-class("post-buttons")]//a
+body!!: null

@@ -5,20 +5,31 @@ body: //article//div[has-class("entry-content")]
 subtitle: $body/*[1]/i/..
 
 @remove: $body/p[text()="—"]
+@remove: $body/p[string-length( text()) < 2][not(*)]
 
-
+author: $body/p/strong[starts-with(., "By ")]/a[starts-with(@href, "https://blog.mozilla.org/press/bios/")]/text()
 author: //address[has-class("vcard")]/a[has-class("author")]/text()
 author: //cite[has-class("author")]/a/text()
 
+author_url: $body/p/strong[starts-with(., "By ")]/a[starts-with(@href, "https://blog.mozilla.org/press/bios/")]/@href
 author_url: //address[has-class("vcard")]/a[has-class("author")]/@href
 author_url: //cite[has-class("author")]/a/@href
 
 published_date: //time/@datetime
 
+@remove: $body/p/strong[starts-with(., "By ")]/a[starts-with(@href, "https://blog.mozilla.org/press/bios/")]/..
+
+@before(<br>): $body//li//li
 
 <figure>: //div[has-class("post-image-full")]
 @append_to($@): $body/p/em
 <figcaption>
+
+<figure>: //div[has-class("wp-caption")]
+<figcaption>: $@//p[has-class("wp-caption-text")]
+
+<p>: $body//a[starts-with(@href, "https://itunes.apple.com/app/")]/img
+@append("Download on the App Store")
 
 cover: //figure[has-class("post-image-full")]
 

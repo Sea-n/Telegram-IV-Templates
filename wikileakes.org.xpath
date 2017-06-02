@@ -1,0 +1,33 @@
+title: //h1[has-class("firstHeading")]
+
+body: //div[@id="bodyContent"]
+
+@after_el("."): $body//a[has-class("image")]
+<figure>: $body//div[has-class("thumbinner")]
+<figcaption>: $body//div[has-class("thumbcaption")]
+
+cover: $body//div[has-class("tright")]/figure
+#cover: $body//div[has-class("thumb")]/figure   # maybe this
+
+@after_el("./../../../../table"): $body//table//div[has-class("poem")]
+@remove: $@/../table
+
+@remove: $body//div[@id="siteSub"]
+@remove: $body//div[@id="jump-to-nav"]
+@remove: $body//div[@id="toc"]
+@remove: $body//div[has-class("noprint")]
+@remove: $body//table[has-class("metadata")]
+@remove: $body//div[has-class("printfooter")]
+@remove: $body//div[has-class("catlinks")]
+@remove: $body//div[has-class("magnify")]
+@remove: $body//span[has-class("mw-editsection")]
+@remove: $body//sup[has-class("reference")]
+@remove: $body//span[has-class("mw-cite-backlink")]
+@remove: $body//table/tr/td/div[@class="floatnone"]/../../..
+@remove: $body//noscript
+
+?exists: //form[@id="mw-history-searchform"]
+?exists: //form[has-class("mw-contributions-form")]
+?exists: //div[@id="mw-pages"]
+?exists: $body//div[@id="Wikiquote"]
+$body: null

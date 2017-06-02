@@ -1,0 +1,19 @@
+body: //article[@itemprop="articleBody"]
+body: //article//div[has-class("canvas-body")]
+
+cover: $body/figure
+cover: //figure[has-class("slideshow-figure")]
+
+author: //a[has-class("author-link")]/text()
+author: //span[has-class("provider-link")]/a/text()
+
+author_url: //a[has-class("author-link")]/@href
+author_url: //span[has-class("provider-link")]/a/@href
+
+published_date: //time/@datetime
+
+<figcaption>: //h1[has-class("slideshow-headline")]
+@append_to(//figure[has-class("slideshow-figure")])
+
+@remove: $body//div[has-class("read-more")]
+@remove: $body//div[has-class("Mah(0)")]

@@ -1,0 +1,64 @@
+title: //h1[has-class("title")]
+title: //h2[has-class("post-title")]
+title: //h2[has-class("pagetitle")]
+title: //div[has-class("doc")]//h2
+
+
+subtitle: //div[has-class("post-title-top")]/div[has-class("entry")]/p
+subtitle: //p[has-class("lead-in")]
+
+body: //div[has-class("entrytext")]
+body: //div[has-class("entry-content")]
+body: //div[has-class("entry")]
+body: //div[@id="w3c_content_body"]//div[has-class("unit")][1]
+body: //div[has-class("doc")]
+
+author: //span[has-class("vcard")]/a/text()
+#author: //cite[has-class("author")]/a/text()
+
+author_url: //span[has-class("vcard")]/a/@href
+#author_url: //cite[has-class("author")]/a/@href
+
+published_date: //time/@datetime
+published_date: //span[has-class("entry-date")]
+
+#@wrap(<figure>): $body//img[@alt]
+#$figure
+#@clone
+#<figcaption>: $@/../img[2]
+#@after_el($figure//figcaption): #$figure//img[@alt]
+#@debug: $body//figure
+
+#@wrap(<figure>): $body//img[has-class("about-photo")]
+#@after_el($@/img): $body//p[has-class("about-photo-cap")]
+#<figcaption>
+
+@before(<br>): $body//li//li
+
+<figure>: $body//div[starts-with(@id, "attachment_")]/a/img/../..
+@after_el("./.."): $@/a/img
+<figcaption>: $@/../p
+
+cover: //header//img
+cover: //div[has-class("featured-image")]/img
+cover: $body//img[has-class("about-photo")]/..
+@match("background-image: url\\(\"(.*)\"\\)", 1): //div[@id="content"]/style[1]
+@set_attr(src, .)
+<img>
+cover
+
+<blockquote>: $body//blockquote/p
+
+<figure>: $body//div[has-class("tiled-gallery-item")]
+
+<slideshow>: $body//div[has-class("gallery-row")]
+
+@remove: $body//div[has-class("blog-subscribe")]
+@remove: $body//div[has-class("sharedaddy")]
+@remove: $body//div[has-class("wpcnt")]
+@remove: $body//p[has-class("toc-jump")]
+@remove: $body//div[@id="recentpress"]
+@remove: $body//div[@id="skip"]
+
+?exists: //p[has-class("tPadding0")]
+body!!: null

@@ -1,0 +1,24 @@
+title: //div[@id="wiki-document-head"]//h1
+
+body: //article[@id="wikiArticle"]
+
+published_date: //div[has-class("contributors-sub")]/time/@datetime
+
+author: //div[has-class("contributors-sub")]/time/../a/text()
+
+author_url: //div[has-class("contributors-sub")]/time/../a/@href
+
+@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src, "https://www.youtube.com/embed/")]
+
+<blockquote>: $body//p[has-class("summary")]
+<blockquote>: $body//div[has-class("note")]
+<blockquote>: $body//div[has-class("notice")]
+
+<span>: $body//a[not(@href)]
+
+@before(<br>): $body//dd
+@before(<br>): $body//dt
+
+@remove: $body//aside[@id="helpful-survey"]
+@remove: $body//div[has-class("htab")]
+@remove: $body//iframe[not(@Sean_Do_Not_Remove)]

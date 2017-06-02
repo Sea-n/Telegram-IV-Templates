@@ -1,0 +1,16 @@
+title: //div[@id="dev_page_title"]
+
+body: //div[@id="dev_page_content"]
+
+<span>: $body//a[@name]
+
+<pre>: $body//pre[string-length(text())=0]/code
+
+?exists: $body//table
+!not_exists: $body//table//tr[1]/td[3]
+@combine(" |  "): $body//table//td
+@before_el("./..")
+@combine(<br>, <br>): $body//table//td
+<p>: $body//table//td
+@before_el("./..")
+@remove: $body//table

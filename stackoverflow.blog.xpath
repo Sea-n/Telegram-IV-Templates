@@ -12,3 +12,37 @@ author: $body//div[has-class("metadata")]//div[has-class("_textLeft")]//a/text()
 author_url: $body//div[has-class("metadata")]//div[has-class("_textLeft")]//a/@href
 
 @remove: $body//div[has-class("metadata")]
+
+<slideshow>: $body//table/tr/td/img/../../..
+@before_el("./../.."): $@/tr/td/img
+@remove: $@/tr
+
+<b>: $body//blockquote//h1
+<b>: $body//blockquote//h2
+<b>: $body//blockquote//h3
+<b>: $body//blockquote//h4
+@after(<br>): $body//blockquote//b
+
+?exists: $body//table/tbody/tr[1]/td
+!not_exists: $body//table/tbody/tr[1]/td[3]
+@combine(" |  "): $body//table/thead/tr/th
+@after_el("./..")
+@combine(" |  "): $body//table/tbody/tr/td
+@before_el("./..")
+<b>: $body//table//th
+@wrap(<p>)
+<p>: $body//table//td
+@combine(<br>): $@/../p/following-sibling::*[1]/self::p
+<p>: $@
+@before_el("./../..")
+@remove: $@/thead
+@remove: $@/tbody
+
+?exists: $body//table/tr/td
+!not_exists: $body//table/tr[1]/td[3]
+@combine(" |  "): $body//table//td
+@before_el("./..")
+@combine(<br>): $body//table//td
+<p>: $body//table//td
+@before_el("./..")
+@remove: $body//table

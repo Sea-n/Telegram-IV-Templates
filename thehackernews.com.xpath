@@ -1,0 +1,32 @@
+title: //h1[has-class("post-title url")]/a/text()
+
+body: //div[has-class("articlebodyonly")]
+
+cover: //div[has-class("separator")]//img
+
+author: //a[has-class("authors")]/span/text()
+author: //a[@rel="author"]/span/text()
+
+author_url: //a[has-class("authors")]/@href
+author_url: //a[@rel="author"]/@href
+
+published_date: //meta[@itemprop="datePublished"]/@content
+
+<figure>: $body//table[has-class("tr-caption-container")]
+<figcaption>: $@//td[has-class("tr-caption")]
+@debug: $@
+
+?exists: $body//table/tr/td
+!not_exists: $body//table/tr[1]/td[3]
+@combine(" |  "): $body//table//td
+@before_el("./..")
+@combine(<br>): $body//table//td
+<p>: $body//table//td
+@before_el("./..")
+@remove: $body//table
+
+?exists: //div[has-class("blog-pager")]
+body!!: null
+
+?true
+@remove: $body//div[@id="source"]
