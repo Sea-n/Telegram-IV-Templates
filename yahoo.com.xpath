@@ -12,6 +12,9 @@ author_url: //span[has-class("provider-link")]/a/@href
 
 published_date: //time/@datetime
 
+@match("url\\((.*)\\);", 1): $body//img/@style
+@set_attr(src, @style): $body//img[@style]
+
 <figcaption>: //h1[has-class("slideshow-headline")]
 @append_to(//figure[has-class("slideshow-figure")])
 

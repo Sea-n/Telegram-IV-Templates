@@ -1,0 +1,18 @@
+title: //h1[has-class("entry-title")]/a/text()
+body: //div[has-class("entry")]
+
+author: //a[@rel="author"]/text()
+author_url: //a[@rel="author"]/@href
+
+<figure>: $body//a/img/..
+<slideshow>: $body//p/figure/img/../..
+
+<figcaption>: $body//slideshow/figure/../following-sibling::p[starts-with(., "▲")]
+@after_el("./prev-sibling::*[1]/self::slideshow/*[last()]")
+
+<figure>: $body//div[has-class("wp-caption")]
+<figcaption>: $@/p[has-class("wp-caption-text")]
+
+@remove: $body//b[starts-with(., " • 不想錯過新科技 ? 請 Follow unwire.hk FB 專頁")]/following-sibling::*
+@remove: $body//b[starts-with(., " • 不想錯過新科技 ? 請 Follow unwire.hk FB 專頁")]
+@remove: $body//p[has-class("meta")]

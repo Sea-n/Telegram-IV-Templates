@@ -12,9 +12,6 @@ body: //div[has-class("l-main-container")]
 
 @set_attr(src, @data-src): $body//img[@data-src]
 
-# alt to figcaption  (WIP)
-@wrap(<figure>): //img[has-class("img-hero")]
-
 <iframe>: $body//div[has-class("vdb_player")]/script
 
 cover: $body/img
@@ -41,28 +38,35 @@ author: //div[has-class("byline")]//a[@rel="author"]/text()
 
 author_url: //div[has-class("byline")]//a[@rel="author"]/@href
 
-@remove: $body//div[has-class("native-ad-mobile")]/..
-
 <figure>: $body//div[has-class("slideshow")]/ol/li
 $pic: $@
 <figcaption>: $pic/h3[has-class("title")]
 @before_el("./.."): $pic//img
 @set_attr(src, @data-full-size-image): $pic/img
-@before_el("./.."): $body//div[has-class("slideshow")]/ol
+@after_el("./.."): $body//div[has-class("slideshow")]/ol
 <slideshow>: $body//ol/figure/..
+<figcaption>: $@/following-sibling::p[1]/em
+@before_el("./../preceding-sibling::*[1]/self::slideshow/figure"): $@
 @remove: $body//div[has-class("slideshow")]
 
 <figure>: $body//div[has-class("wp-caption")]
 <figcaption>: $@/p[has-class("wp-caption-text")]
 
 <figure>: $body//p/img/..
-<figcaption>: $body//p/em
-@before_el("./..")
-@after_el("./preceding-sibling::figure[1]/img"): $@
+<figcaption>: $@/following-sibling::p[1]/em
+@after_el("./../preceding-sibling::figure[1]/img"): $@
+
+
+
+<div>: $body//figure[has-class("graf-after--p")]
 
 @remove: $body//div[has-class("inset-ad")]
 @remove: $body//div[has-class("img-unit")]
-@remove: $body//div[has-class("ad-cluster-container")]
+#@remove: $body//div[has-class("ad-cluster-container")]
 @remove: $body//a[has-class("event-after-article")]
 @remove: $body//div[has-class("social-share")]
 @remove: $body//div[has-class("social-flw")]
+@remove: $body//div[has-class("byline")]
+
+?exists: //div[has-class("slides")]
+body!!: null

@@ -1,0 +1,28 @@
+title: //h1[has-class("article-title")]
+
+body: //div[has-class("article-content")]
+body: //article
+
+author: //a[@itemprop="author"]/text()
+
+author_url: //a[@itemprop="author"]/@href
+author_url: //meta[@property="article:author"]/@content
+
+@match("\"datePublished\":\"([^\"]*)\"", 1): //script[@data-react-helmet="true"]
+published_date
+published_date: //time[has-class("publish-date")]/@datetime
+published_date: //div[has-class("color-darker-gray")]
+
+<figure>: //div[has-class("vcB4uI1v")]
+<figcaption>: //div[@data-reactid="193"]
+
+cover: //figure[has-class("article-hero")]
+cover: //figure[has-class("vcB4uI1v")]
+
+@set_attr(src, @data-lazy-src): //img[@data-lazy-src]
+
+@remove: $body//aside[has-class("right-rail__container--ad")]
+@remove: $body//div[has-class("dont-print")]
+
+?exists: //div[has-class("brightcove-wrapper")]
+body!!: null

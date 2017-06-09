@@ -1,33 +1,42 @@
-title: //h1[has-class("firstHeading")]
+title: //div[has-class("container-text")]//h1
+title: //div[has-class("page-header")]//h1
+title: //h1[has-class("leak-title")]
+title: //div[@id="uniquer"]//h2
 
+body: //div[has-class("text-content")]
+body: //div[@id="uniquer"]
+body: //div[has-class("container-text")]
+body: //div[@id="email_body"]
 body: //div[@id="bodyContent"]
 
-@after_el("."): $body//a[has-class("image")]
-<figure>: $body//div[has-class("thumbinner")]
-<figcaption>: $body//div[has-class("thumbcaption")]
+@replace("UTC", "UTC+0"): //th[text()="Date"]/../td
+@datetime: $@
+published_date: $@
+@replace("^[A-Za-z]+ ([A-Za-z]+) (\\d+), (\\d+:\\d+) GMT", "$1 $2 $3"): //div[has-class("container-text")]//h2
+published_date: $@
+published_date: //div[has-class("container-text")]//div[has-class("timestamp")]/text()
+@replace(".* (\\d+)-(\\d+)-(\\d+).*", "$1/$2/$3"): //span[has-class("timestamp")]
+published_date: $@/text()
+published_date: $body/p[1]
 
-cover: $body//div[has-class("tright")]/figure
-#cover: $body//div[has-class("thumb")]/figure   # maybe this
+@match("By (.*)", 1): $body/p[1]/small/b/i
+author
+@remove
+author: $body/*[last()]/self::p/br/../text()[1]
 
-@after_el("./../../../../table"): $body//table//div[has-class("poem")]
-@remove: $@/../table
+cover: //div[has-class("title-area")]//img
 
-@remove: $body//div[@id="siteSub"]
+@prepend_to($body): //div[has-class("langlist")]
+
+
+<span>: $body//a[@name]
+
+@remove: $body//dl/dt/a/img/../../..
+@remove: $body//h3[@id="siteSub"]
 @remove: $body//div[@id="jump-to-nav"]
-@remove: $body//div[@id="toc"]
-@remove: $body//div[has-class("noprint")]
-@remove: $body//table[has-class("metadata")]
+@remove: $body//table[@id="toc"]
 @remove: $body//div[has-class("printfooter")]
 @remove: $body//div[has-class("catlinks")]
-@remove: $body//div[has-class("magnify")]
-@remove: $body//span[has-class("mw-editsection")]
-@remove: $body//sup[has-class("reference")]
-@remove: $body//span[has-class("mw-cite-backlink")]
-@remove: $body//table/tr/td/div[@class="floatnone"]/../../..
-@remove: $body//noscript
-
-?exists: //form[@id="mw-history-searchform"]
-?exists: //form[has-class("mw-contributions-form")]
-?exists: //div[@id="mw-pages"]
-?exists: $body//div[@id="Wikiquote"]
-$body: null
+@remove: $body//div[has-class("leak-navigation")]
+@remove: $body//a[has-class("searchbutton")]
+@remove: $body//span[has-class("timestamp")]

@@ -21,7 +21,15 @@ author_url: $body//div[has-class("metadata")]//div[has-class("_textLeft")]//a/@h
 <b>: $body//blockquote//h2
 <b>: $body//blockquote//h3
 <b>: $body//blockquote//h4
-@after(<br>): $body//blockquote//b
+@wrap(<p>): $body//blockquote/b
+@after(<br>): $body//blockquote/p
+@after(<br>): $body//blockquote/p
+@after(<br>): $body//blockquote//li
+@after(<br>): $body//blockquote//li
+@before("• "): $body//blockquote//li
+
+@before(<br>): $body//li//li
+@before("• "): $body//li//li
 
 ?exists: $body//table/tbody/tr[1]/td
 !not_exists: $body//table/tbody/tr[1]/td[3]
@@ -38,7 +46,7 @@ author_url: $body//div[has-class("metadata")]//div[has-class("_textLeft")]//a/@h
 @remove: $@/thead
 @remove: $@/tbody
 
-?exists: $body//table/tr/td
+?exists: $body//table
 !not_exists: $body//table/tr[1]/td[3]
 @combine(" |  "): $body//table//td
 @before_el("./..")
