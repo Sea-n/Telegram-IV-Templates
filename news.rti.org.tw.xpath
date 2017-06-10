@@ -1,0 +1,32 @@
+title: //h4[@id="print_headline"]
+
+body: //div[@id="print_content"]
+body: //div[has-class("desc")]
+body: //div[has-class("contentBox")]
+
+?exists: //ul[has-class("sb-slider")]/li[2]
+<slideshow>: //ul[has-class("sb-slider")]
+<div>: $@/li
+slider: $@/..
+<figcaption>: //div[has-class("img_info")]
+@after_el("./preceding-sibling::div[has-class(\"mediaInfo\")]//img")
+<figure>: $@/..
+@before_el("./../../..")
+@prepend_to($body): $slider
+
+?not_exists: //ul[has-class("sb-slider")]/li[2]
+<figcaption>: //div[has-class("img_info")]
+@after_el("./preceding-sibling::div[has-class(\"mediaInfo\")]//img")
+<figure>: $@/..
+cover: $@
+
+?true
+
+@match("\\d+-\\d+-\\d+ \\d+:\\d+"): //p[@id="print_date"]/span[1]
+@datetime(+8): $@
+published_date: $@
+
+@datetime(+8): //div[has-class("date")]
+published_date: $@
+
+@remove: $body//div[has-class("text_photo")]

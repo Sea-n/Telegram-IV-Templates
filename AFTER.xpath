@@ -1,0 +1,145 @@
+# We apply some additional rules to each Instant View template.
+?exists: $body
+
+#####   Widgets   #####
+
+# Most widgets are iFrames that are compatible with the Instant View format and will work out of the box. But some popular widgets do not use iFrames and need a little extra work.
+
+# We transform such widgets to an Instant-View-compatible format - into an iFrame with an 'src' attribute and use @before to insert them into the page. Then we use the @remove function to delete the unsupported widget (because the essential content from it is now present on the IV page).
+
+# twitter-tweet
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href" \
+): $body//blockquote[has-class("twitter-tweet")]
+@remove
+
+# twitter-video
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
+  class, "twitter-video" \
+): $body//blockquote[has-class("twitter-video")]
+@remove
+
+# facebook post
+$fb_post: $body//div[has-class("fb-post")][@data-href]
+@urlencode: $fb_post/@data-href
+@set_attr(data-src, "https://www.facebook.com/plugins/post.php?href=", @data-href, "&show_text=", @data-show-text, "&width=640"): $fb_post
+@before(<iframe>, src, @data-src): $fb_post
+@remove
+
+# facebook video
+$fb_video: $body//div[has-class("fb-video")][@data-href]
+@urlencode: $fb_video/@data-href
+@set_attr(data-src, "https://www.facebook.com/plugins/video.php?href=", @data-href, "&show_text=", @data-show-text, "&width=640"): $fb_video
+@before(<iframe>, src, @data-src): $fb_video
+@remove
+
+# aparat
+$aparat_video: $body//script[starts-with(@src, "https://www.aparat.com/embed/")]
+@set_attr(data-hash, @src)
+@match("^https://www.aparat.com/embed/([^?]+)", 1): $@
+@set_attr(data-src, "https://www.aparat.com/video/video/embed/videohash/", @data-hash, "\\/vt/frame"): $aparat_video
+@before(<iframe>, src, @data-src): $aparat_video
+@remove
+
+# instagram
+@before(<iframe>, \
+  src, ".//a[starts-with(@href, \"https://www.instagram.com/p/\")]/@href" \
+): $body//blockquote[has-class("instagram-media")]
+@remove
+
+# github
+<iframe>: $body//script[starts-with(@src,"https://gist.github.com/")]
+
+#####   Add Anchors   #####
+# Instant View supports anchors. We can add them before each <a> tag that has a name attribute.
+
+@before(<anchor>, name, @name): $body//a[@name]
+
+#####   Unsupported elements   #####
+
+# We mark content that is not supported in the Instant View format using the @unsupported function. The Instant View bot will not generate an Instant View page if a page features matching elements. This is to make sure that users never get an Instant View page with incomplete information.
+
+@unsupported: $body//embed
+@unsupported: $body//object
+@unsupported: $body//table
+@unsupported: $body//canvas
+
+# We also mark some popular widgets that are not supported yet but may get supported later.
+
+# imgur
+@unsupported: $body//blockquote[has-class("imgur-embed-pub")]
+
+# reddit
+@unsupported: $body//div[has-class("reddit-card")]
+@unsupported: $body//div[has-class("reddit-embed")]
+
+# playbuzz
+@unsupported: $body//div[has-class("pb_feed")][@data-item]
+
+#####   Cleanup   #####
+# Remove all html comments, styles and scripts.
+
+@remove: $body//comment()
+@remove: $body//script
+@remove: $body//style
+
+#####   Simplifying   #####
+# We use the @simplify function to process target nodes according to the Instant View format. The title, subtitle and cover already exist as separate elements on the Instant View page, so we no longer need them in the article's body.
+
+@simplify: $title
+@remove
+@simplify: $subtitle
+@remove
+@simplify: $cover
+@remove
+
+# The body element should be an <article> for simplify to work correctly. This is the last step.
+<article>: $body
+@simplify
+body!
+
+#####   Meta information   #####
+
+# Even if a page doesn't have an associated Instant View template, we can still get some meta information from it and use it for link previews. So we apply the following rules to all pages:
+?true
+
+$head: /html/head
+$meta: $head/meta
+
+# Meta tags may have various formats.
+# We first bring them to the same format <meta name="key" content="value">.
+@set_attr(name, @property): $meta[not(@name) and @property]
+@set_attr(name, @itemprop): $meta[not(@name) and @itemprop]
+@set_attr(content, @value): $meta[not(@content) and @value]
+
+# An article can have several authors.
+# We combine author names using a little magic.
+@append(<div>): $head
+$authors_el:    $@
+$authors:       $meta[@name="author"]
+$authors?:      $meta[@name="article:author"]
+
+@append_to($authors_el): $authors
+@before(", ")
+@remove: ($@)[1]
+@before(@content): $authors
+@remove
+author: $authors_el
+
+# Basic information can be usualy obtained from Open Graph or Twitter Cards metatags.
+title: $meta[@name="twitter:title"]/@content[normalize-space()]
+title: $meta[@name="og:title"]/@content[normalize-space()]
+title: $head/title[normalize-space()]
+
+description: $meta[@name="twitter:description"]/@content[normalize-space()]
+description: $meta[@name="og:description"]/@content[normalize-space()]
+description: $body/p[normalize-space()]
+description: $meta[@name="description"]/@content[normalize-space()]
+
+image_url: $meta[@name="twitter:image"]/@content[normalize-space()]
+image_url: $meta[@name="og:image"]/@content[normalize-space()]
+
+published_date: $meta[@name="article:published_time"]/@content
+
+channel: $meta[@name="telegram:channel"]/@content

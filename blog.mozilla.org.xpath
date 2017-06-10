@@ -4,9 +4,6 @@ body: //article//div[has-class("entry-content")]
 
 subtitle: $body/*[1]/i/..
 
-@remove: $body/p[text()="—"]
-@remove: $body/p[string-length( text()) < 2][not(*)]
-
 author: $body/p/strong[starts-with(., "By ")]/a[starts-with(@href, "https://blog.mozilla.org/press/bios/")]/text()
 author: //address[has-class("vcard")]/a[has-class("author")]/text()
 author: //cite[has-class("author")]/a/text()
@@ -17,21 +14,37 @@ author_url: //cite[has-class("author")]/a/@href
 
 published_date: //time/@datetime
 
-@remove: $body/p/strong[starts-with(., "By ")]/a[starts-with(@href, "https://blog.mozilla.org/press/bios/")]/..
-
-@before(<br>): $body//li//li
 
 <figure>: //div[has-class("post-image-full")]
 @append_to($@): $body/p/em
 <figcaption>
+cover: //figure[has-class("post-image-full")]
 
 <figure>: //div[has-class("wp-caption")]
 <figcaption>: $@//p[has-class("wp-caption-text")]
 
-<p>: $body//a[starts-with(@href, "https://itunes.apple.com/app/")]/img
-@append("Download on the App Store")
+<figure>: $body//p[string-length( text()) = 0]/a/img/../..
+@before_el("./.."): $@/a/img
+@wrap(<figcaption>): $@/../a
+$linkfig: $@
+@prepend("("): $linkfig/../..//figcaption
+@append("link"): $linkfig/..//figcaption/a
+@append(")"): $linkfig/../..//figcaption
 
-cover: //figure[has-class("post-image-full")]
+$linktxt: $body//p[string-length( text()) > 0]/a/img/..
+@prepend("("): $linktxt
+@append("link"): $linktxt
+@append(")"): $linktxt
+@append(<br>): $linktxt
+
+@before(<br>): $body//li//li
+@before("• "): $body//li//li
+
+
+@remove: $body/p[text()="—"]
+@remove: $body/p[string-length( text()) < 2][not(*)]
+@remove: $body/p/strong[starts-with(., "By ")]/a[starts-with(@href, "https://blog.mozilla.org/press/bios/")]/..
+
 
 ?exists: //article[2]
 title!!: null

@@ -1,0 +1,21 @@
+title: //div[has-class("newsdetail-titel")]
+
+body: //div[has-class("newsdetail-content")]
+
+@datetime(+8): //div[has-class("newsdetail-time")]//p
+published_date: $@
+
+cover: //iframe[has-class("newsdetail-video")][contains(@src, "youtube.com")]
+
+<figure>: //div[has-class("newsdetail")]/div[has-class("newsdetail-img")]
+cover: $@
+<figcaption>: //div[has-class("newsdetail")]/div[has-class("newsdetail-img-t")]/p
+@append_to($cover): $@
+
+author: ""
+
+<blockquote>: //div[has-class("newsdetail-label")]
+@prepend_to($body)
+
+?exists: //iframe[has-class("newsdetail-video")][not(contains(@src, "youtube.com"))]
+body!!: null

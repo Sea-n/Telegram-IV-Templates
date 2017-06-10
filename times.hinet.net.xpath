@@ -1,0 +1,26 @@
+body: //div[has-class("detail")]
+
+cover: //div[has-class("picSet")]//img
+cover: $body/p/img
+
+<figure>: //div[has-class("main-photo")]
+<figcaption>: $@/cite
+cover: $@/..
+
+author: //div[has-class("cpInfo")]//a/text()
+
+author_url: //div[has-class("cpInfo")]//a/@href
+
+@match("\\d+[\\d /]+:\\d+"): //div[has-class("cpInfo")]
+@datetime(+8)
+published_date
+
+
+?exists: $body//table
+!not_exists: $body//table//tr[1]/td[3]
+@combine(" |  "): $body//table//td
+@before_el("./..")
+@combine(<br>, <br>): $body//table//td
+<p>: $body//table//td
+@before_el("./..")
+@remove: $body//table

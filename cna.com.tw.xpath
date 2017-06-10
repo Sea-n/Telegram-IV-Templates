@@ -1,0 +1,13 @@
+title: //h1[@itemprop="headline"]
+
+body: //section[@itemprop="articleBody"]
+
+author: ""
+
+@match("\\d+/\\d+/\\d+ \\d+:\\d+"): //div[has-class("update_times")]/p[1]
+@datetime(+8): $@
+published_date: $@
+
+<figure>: $body//div[starts-with(@class, "pic_")]
+<figcaption>: $@//span
+@remove: $@/../figcaption[has-class("icon")]

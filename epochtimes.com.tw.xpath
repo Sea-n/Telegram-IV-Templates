@@ -1,0 +1,11 @@
+title: //h1[has-class("entry-title")]
+
+body: //div[has-class("td-paragraph-padding-1")]
+
+cover: //figure[has-class("td-post-image-full")]
+
+published_date: //time[has-class("entry-date")]/@datetime
+
+@wrap(<figure>): //div[has-class("articleimage2")]
+@before_el("./.."): $@/a/img
+<figcaption>: //div[has-class("articleimage2")]

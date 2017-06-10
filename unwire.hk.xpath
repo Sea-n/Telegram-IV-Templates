@@ -16,3 +16,6 @@ author_url: //a[@rel="author"]/@href
 @remove: $body//b[starts-with(., " • 不想錯過新科技 ? 請 Follow unwire.hk FB 專頁")]/following-sibling::*
 @remove: $body//b[starts-with(., " • 不想錯過新科技 ? 請 Follow unwire.hk FB 專頁")]
 @remove: $body//p[has-class("meta")]
+
+?exists: //script[starts-with(@src, "//www.jotform.com/jsform/")]
+body!!: null

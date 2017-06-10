@@ -1,0 +1,33 @@
+title: //h1[has-class("newsbigtitle")]
+
+body: //div[has-class("newscontents")]
+
+cover: //div[@id="prog_youtube"]//iframe
+cover: //div[has-class("SinglePageImg")]/img
+
+@clone: //div[has-class("timebar")]
+@match("20\\d+/\\d+/\\d+ \\d+:\\d+"): $@
+@datetime(+8)
+published_date: $@
+
+@match("20\\d+/\\d+/\\d+ \\d+:\\d+"): //span[has-class("info")]
+@datetime(+8)
+published_date: $@
+
+@match("20\\d+/\\d+/\\d+ \\d+:\\d+ ([^ ]+) 綜合報導", 1): //div[has-class("timebar")][2]
+author: $@
+
+@remove: $body/text()
+@remove: $body/*[last()]/self::a[contains(@href, "//news.cts.com.tw/")]
+@remove: $body/*[last()]/self::br
+@remove: $body/*[last()]/self::br
+@remove: $body/*[last()]/self::br
+
+
+# old site, special case
+body: //div[@id="ctscontent"]/p
+
+title: //span[has-class("newsheadline_big1")]
+
+?exists: //div[@id="video_container"]
+body!!: null
