@@ -1,0 +1,11 @@
+title: //h1[has-class("entry-title")]
+
+body: //div[has-class("entry-content")]
+
+author: //a[@rel="author"]/span/text()
+
+author_url: //a[@rel="author"]/@href
+
+published_date: //time[@itemprop="datePublished"]/@datetime
+
+cover: //div[has-class("entry-media")]/figure

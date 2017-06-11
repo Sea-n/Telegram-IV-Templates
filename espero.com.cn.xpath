@@ -1,0 +1,19 @@
+title: //h1
+
+body: //div[@id="container_txt"]
+
+published_date: //div[has-class("time")]/text()
+
+@debug: $body//center/prev-sibling::*[1]/self::center/img/..
+@debug: $body//center
+<figure>: $body//center/prev-sibling::*[1]/self::center/img/..
+<figcaption>: $body//figure/img/../../center/font
+@after_el("./../prev-sibling::*[1]/self::figure/img")
+
+@set_attr(src, @src): //span[@id="videofile"]
+@replace("%20", " "): $@
+<video>: //span[@id="videofile"]
+@prepend_to($body): $@
+
+@remove: //div[@id="vf"]
+@remove: $body//p[@align="right"]/font[starts-with(., "Redaktoro: ")]/../following-sibling::*

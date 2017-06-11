@@ -1,0 +1,27 @@
+title: //span[has-class("post-title")]
+
+subtitle: //h2[has-class("post-subtitle")]
+
+body: //div[has-class("single-post-content")]
+
+@set_attr(src, @data-src): //img[@data-src]
+cover: //div[has-class("single-featured")]//figure
+cover: //div[has-class("single-featured")]//img
+
+author: //span[has-class("post-author-name")]/b/text()
+
+author_url: //a[has-class("post-author-a")]/@href
+
+<slideshow>: //div[has-class("slider")]/ul
+<figure>: $@/li
+
+<slideshow>: //div[has-class("fotorama")]
+
+@remove: $body//div[has-class("bs-irp")]
+@remove: $body//div[has-class("qrcode")]
+@remove: $body//div[has-class("applinks")]
+@remove: $body//div[has-class("post-tags")]
+@remove: $body//div[has-class("post-share")]
+@remove: $body//section[has-class("post-author")]
+@remove: $body//section[has-class("next-prev-post")]
+@remove: $body/p[string-length( text()) < 2][not(*)]

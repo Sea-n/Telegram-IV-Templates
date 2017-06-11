@@ -1,0 +1,38 @@
+title: //div[has-class("aritcle")]/h1
+title: //div[has-class("white-section")]//h1
+
+body: //div[@id="content"]
+
+cover: //div[has-class("article")]/figure
+
+author: //div[has-class("reporter")]//a/text()
+author: //div[has-class("author")]//a/text()
+author: ""
+@replace("by: ", ""): $body/*[1]/self::em/strong/text()
+author: $@
+@remove: $body/*[1]/self::em/strong/..
+
+author_url: //div[has-class("reporter")]//a/@href
+author_url: //div[has-class("author")]//a/@href
+
+@match("\\d+ [A-Za-z]+ \\d+"): //div[has-class("judul-photo")]//time/text()
+published_date
+
+<slideshow>: //ul[has-class("bxslider")]
+@prepend_to($body)
+<figure>: $@//li
+<figcaption>: //div[has-class("photo-caption")]
+
+<p>: //ul[has-class("article-paging")]//i
+@append("<"): //p[has-class("fa-angle-left")]
+@append(">"): //p[has-class("fa-angle-right")]
+@combine("  "): //ul[has-class("article-paging")]/li
+@append_to($body)
+@before(<br>)
+
+@remove: $body/*[1]/self::br
+@remove: $body/*[1]/self::br
+@remove: $body/*[1]/self::br
+
+?exists: //div[has-class("video")]
+body!!: null

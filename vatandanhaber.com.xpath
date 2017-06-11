@@ -1,0 +1,16 @@
+title: //h3[has-class("hs-share-title")]
+
+subtitle: //div[has-class("page-header")]/p
+
+body: //div[@id="newsbody"]
+body: //div[@id="newstext"]
+body: //p[@itemprop="description"]
+
+cover: //div[has-class("newspic")]//img
+cover: //div[has-class("span8")]//img
+
+author: //div[has-class("hs-editor-name")]
+
+author_url: //div[has-class("hs-editor")]//a/@href
+
+published_date: //span[@data-date]/@data-date

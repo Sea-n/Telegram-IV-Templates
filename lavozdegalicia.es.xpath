@@ -1,0 +1,19 @@
+title: //h1[@itemprop="headline"]
+
+subtitle: //h2[@itemprop="alternativeHeadline"]
+
+body: //div[has-class("text")]
+
+author: //span[has-class("author")]//span/text()
+
+published_date: //time[@datetime]/@datetime
+
+<figcaption>: //div[has-class("photo")]//span[has-class("detail")]
+cover: //div[has-class("photo")]/figure
+
+@after_el("./next-sibling::span"): //span[has-class("rel_info")]
+@before(<br>)
+<figcaption>: //p[has-class("pie")]
+@after_el("./prev-sibling::*/self::figure/img")
+
+@remove: $body/p[string-length( text()) < 2][not(*)]

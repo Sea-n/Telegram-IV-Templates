@@ -1,0 +1,16 @@
+title: //div[has-class("title_article")]//h1
+
+body: //div[has-class("post-cotenuto")]
+body: //div[has-class("post-contenuto")]
+
+author: //span[has-class("author-name")]
+
+cover: //div[has-class("panel-img")]//img
+
+<slideshow>: //div[has-class("gallery")]
+@set_attr(src, @src): $body//img
+@replace("\\-\\d+x\\d+\\.", "."): $@
+
+@before(<br>): //div[has-class("scheda_nome")]
+
+@remove: //div[has-class("static-social")]

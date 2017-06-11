@@ -1,0 +1,31 @@
+title: //h1[@itemprop="name"]
+
+subtitle: //h2[@itemprop="description"]
+
+body: //div[has-class("news-detail-content")]
+
+
+@json_to_xml: //div[has-class("htplay_video")]/@data-ht
+<video>: $@/ht_files/item[last()]/mp4/item[last()]/file
+@set_attr(src, .)
+cover
+cover: //div[has-class("news-detail-featured-img")]/img
+
+published_date: //meta[@name="DC.date.issued"]/@content
+published_date: //meta[@data-http-equiv="last-modified"]/@content
+
+@after_el("./../.."): //ul[has-class("news-detail-related-news-min")]/li/a/figure
+@after(<figcaption>): $@/img
+@append_to("./../next-sibling::figure/figcaption"): //ul[has-class("news-detail-related-news-min")]/li/a
+@after_el("./.."): //ul[has-class("news-detail-related-news-min")]//div[has-class("info")]/h3
+<div>: //ul[has-class("news-detail-related-news-min")]
+
+@remove: $body//div[has-class("nd-page-end-620")]
+@remove: $body//div[has-class("comment-area")]
+@remove: $body//div[has-class("reply-to-comment-area")]
+@remove: $body//div[starts-with(@id, "ENGAGEYA_WIDGET_")]
+@remove: $body//div[has-class("ads-zone")]
+@remove: $body//div[has-class("news-detail-content-info")]
+@remove: $body//div[@id="relatedNews"]
+@remove: $body//script
+@remove: $body/*[last()]/self::hr

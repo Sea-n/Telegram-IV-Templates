@@ -1,21 +1,27 @@
 title: //div[has-class("article-paragraph--header")]//h1
 title: //h2[has-class("blog_post_title")]
+title: //h2[has-class("kb-post-title")]
 
 subtitle: //div[has-class("article-paragraph--header")]//p
 
 body: //div[has-class("article-body")]
 body: //div[has-class("blog_article")]
+body: //div[has-class("kb-post-content")]
 #body: //div[has-class("article-paragraph--video")]
 #@debug: $body
 
 cover: //img[has-class("article-head__image")]
 
 author: //dl[has-class("article-attribution__dl")]/dd[1]/text()
+@replace(" \\-\\-$", ""): //h4[has-class("kb-posted-by")]//a/text()
+author: $@
 
 author_url: //div[has-class("article-attribution")]/a/@href
+author_url: //h4[has-class("kb-posted-by")]//a/@href
 
 published_date: //head//meta[@property="article:published_time"]/@content
 published_date: //dl[has-class("article-attribution__dl")]/dd[2]/text()
+published_date: //span[has-class("kb-post-date")]/text()
 
 
 <figure>: $body//div[has-class("slick-slide")]

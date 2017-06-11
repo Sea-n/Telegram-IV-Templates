@@ -1,0 +1,21 @@
+title: //h1[@itemprop="headline"]/a/text()
+
+subtitle: //div[has-class("content-body__description")]
+
+body: //div[has-class("content-body__detail")]
+
+published_date: //time[@itemprop="datePublished"]/@datetime
+
+author: //a[has-class("content-info__author")]/text()
+author_url: //a[has-class("content-info__author")]/@href
+
+@set_attr(src, @data-original): //img[@data-original]
+cover: //figure[has-class("content-body__image")]
+<iframe>: //meta[@itemprop="embedURL"]
+@set_attr(src, @content)
+@replace("youtube.com/", "$0embed/"): $@
+cover: //iframe[@itemprop="embedURL"]
+@debug
+
+<p>: //div[has-class("content-card__detail")]
+@after(":"): $@/div[has-class("content-card__category")]
