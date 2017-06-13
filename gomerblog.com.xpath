@@ -1,0 +1,21 @@
+title: //h1[has-class("entry-title")]
+
+body: //div[has-class("td-post-content")]
+
+author: //div[has-class("td-post-author-name")]/a/text()
+
+author_url: //div[has-class("td-post-author-name")]/a/@href
+
+cover: $body//figure[has-class("alignright")]
+cover: $body//img[has-class("alignright")]
+
+@set_attr(src, @srcset): //img[@srcset]
+@replace(".+w,\\s([^\\s]+)\\s\\d+w", "$1"): $@
+
+@replace("\\-\\d+x\\d+\\.", "."): //img[starts-with(@src, "http://gomerblog.wpengine.com/wp-content/uploads/")]/@src
+
+@after_el("./.."): //p/figure
+
+@remove: //div[has-class("textwidget")]
+@remove: //div[has-class("nc_socialPanel")]
+@remove: $body//p[string-length(text()) < 2][not(*)]

@@ -1,0 +1,18 @@
+title: //div[has-class("postarticle")]/h1
+
+body: //div[has-class("postarticle")]
+
+author: //p[has-class("writer")]//a[contains(@rel, "author")]/text()
+
+author_url: //p[has-class("writer")]//a[contains(@rel, "author")][not(@href="http://www.siliconera.com")]/@href
+@remove: $body//p[has-class("writer")]
+
+cover: $body//p[1]//iframe
+cover: $body//p[1]//img
+
+<slideshow>: //div[@id="related_post"]//ul[has-class("related_post")]
+<figure>: $@//li
+@wrap(<figcaption>): $@//a[has-class("wp_rp_title")]
+
+@remove: $body//iframe[starts-with(@src, "http://www.siliconera.com/wordpress/wp-content/themes/siliconera/APIs/apientry.php")]
+@remove: $body/p[string-length(text()) < 2][not(*)]

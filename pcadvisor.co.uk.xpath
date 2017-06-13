@@ -1,0 +1,27 @@
+title: //h1[@itemprop="headline"]
+
+subtitle: //h3[has-class("description")]
+
+body: //main[has-class("articleBody")]
+body: //div[@id="articleWrapper"]
+
+author: //a[@rel="author"]/text()
+
+author_url: //a[@rel="author"]/@href
+
+published_date: //time[@itemprop="datePublished"]/@datetime
+
+<video>: //meta[@itemprop="contentUrl"]
+@set_attr(src, @content)
+cover: //header//video
+cover: //header//figure
+cover: //header//iframe
+
+@set_attr(src, @data-src): //img[@data-src]
+ 
+@before(<br>): $body//dl/dd/next-sibling::dt
+
+@before(<hr>): $body//section[@id="downloadLinks"]
+
+@remove: $body//noscript/img/..
+@remove: $body/p[string-length( text()) < 2][not(*)]

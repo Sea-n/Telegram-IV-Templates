@@ -11,11 +11,12 @@ body: //div[@id="article_show_content"]
 body: //div[has-class("single")]
 
 
+author: //div[has-class("story_bady_info_author")]/span/a/text()
 author: //div[has-class("story_bady_info_author")]/span/text()
 author: //div[@id="story_bady_info"]/span/text()
 author: //div[has-class("story_bady_info_author")]/a/text()
 
-author_url: //div[has-class("story_bady_info_author")]/a/@href
+author_url: //div[has-class("story_bady_info_author")]//a/@href
 
 @replace("-", "/"): //time/@datetime
 @datetime(+8): //time

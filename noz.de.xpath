@@ -1,0 +1,18 @@
+title: //h1[@itemprop="headline"]/span
+
+subtitle: //h1[@itemprop="headline"]/i
+
+body: //div[@id="article"]
+
+@set_attr(src, @data-lazy-load): //img[@data-lazy-load]
+
+<figure>: //div[has-class("image-text-container")]
+<figcaption>: //i[has-class("img-titel")]
+
+cover: //figure[has-class("image-text-container")]
+
+published_date: //i[@itemprop="datePublished"]/@content
+
+@remove: $body//div[@id="content-jump-to"]/*[last()]/self::br
+@remove: $body//div[has-class("scribble-ticker")]
+@remove: $body//p[string-length( text()) < 2][not(*)][not(contains(text(), "."))]

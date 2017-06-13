@@ -6,7 +6,8 @@ cover: //div[@id="prog_youtube"]//iframe
 cover: //div[has-class("SinglePageImg")]/img
 
 @clone: //div[has-class("timebar")]
-@match("20\\d+/\\d+/\\d+ \\d+:\\d+"): $@
+@clone: //div[has-class("timebar")]
+@match("20\\d+/\\d+/\\d+ \\d+:\\d+"): //div[has-class("timebar")][1]
 @datetime(+8)
 published_date: $@
 
@@ -14,7 +15,13 @@ published_date: $@
 @datetime(+8)
 published_date: $@
 
-@match("20\\d+/\\d+/\\d+ \\d+:\\d+ ([^ ]+) 綜合報導", 1): //div[has-class("timebar")][2]
+@match("\\d ([^\\d ]+)\\s*/", 1): //div[has-class("timebar")][2][not(contains(., "報導"))]
+@replace("、", ", "): $@
+author: $@
+
+@debug: //div[has-class("timebar")][4]
+@match("\\d ([^\\d]+[^\\d ])\\s+[^\\s]*報導\\s*/", 1): //div[has-class("timebar")][3][contains(., "報導")]
+@replace("\\s+", ", "): $@
 author: $@
 
 @remove: $body/text()
@@ -22,7 +29,6 @@ author: $@
 @remove: $body/*[last()]/self::br
 @remove: $body/*[last()]/self::br
 @remove: $body/*[last()]/self::br
-
 
 # old site, special case
 body: //div[@id="ctscontent"]/p

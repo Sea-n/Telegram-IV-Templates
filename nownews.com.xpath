@@ -1,19 +1,16 @@
-?domain: huasons\.nownews\.com
-
-?path: /n/.*
-
 title: //div[@itemprop="headline"]
+title: //h1[has-class("content-title")]
 
 body: //div[has-class("story_content")]
+body: //div[has-class("body")]
 
-<figure>: //div[has-class("story_photo")]//img/..
-<figcaption>: $@/h3
-image_url: $@/../img/@src
-@prepend_to($body): $@/..
+image_url: //head//meta[@property="og:image"][contains(@content, "http")][1]/@content
 
-@prepend(<hr>): $body//div[has-class("page_nav")]
+description: //head//meta[@property="og:description"][string-length(@content) > 20]/@content
 
-@remove: $body//p[has-class("bzkeyword")]
+@match("記者(.+)／.+報導", 1): //span[@itemprop="name"][starts-with(., "記者")]
+author: $@
+author: ""
 
 @match("\\d.*\\d"): //div[@id="reporter_info"]/p/a[3]/@href
 $date
@@ -23,17 +20,22 @@ $date
 @datetime(+8): $@
 published_date
 
-author: //head//meta[@property="og:site_name"]/@content
+@match("[0-9].*[0-9]"): //div[has-class("news-info")]/text()
+@replace(" / ", " ")
+@replace("\\.", "/")
+@wrap(<div>, id, "date")
+@datetime(+8): $@
+published_date
 
+<figure>: //p/cite/..
+<figcaption>: $@/cite
 
+<figure>: //div[has-class("story_photo")]//img/..
+<figcaption>: $@/h3
+image_url: $@/../img/@src
+@prepend_to($body): $@/..
 
-?domain: nownews\.com
-
-?path: /n/.*
-
-description: //head//meta[@property="og:description"]/@content
-
-body: //div[has-class("body")]
+@prepend(<hr>): $body//div[has-class("page_nav")]
 
 $feapho: //div[has-class("featured-photo")]
 @remove: $feapho//noscript
@@ -43,35 +45,7 @@ $feaalt: $feapho/div/text()
 @append_to($feapho/a/figure): $@
 @prepend_to($body): $feapho//figure
 
-image_url: //head//meta[@property="og:image"][contains(@content, "http")][1]/@content
-
-
-
-?path: /v/.*
-
-body: //div[has-class("body")]
-
-image_url: //head//meta[@property="og:image"][contains(@content, "http")][1]/@content
-
 @set_attrs(width, 640, height, 360): //div[has-class("featured-photo")]/iframe
 @prepend_to($body)
 
-<img>: //head//meta[@property="og:image"][contains(@content, "http")][1]
-@wrap(<figure>)
-@set_attr(src, @content)
-cover
-
-
-
-?true
-
-title: //h1[has-class("content-title")]
-
-author: //head//meta[@property="og:site_name"]/@content
-
-@match("[0-9].*[0-9]"): //div[has-class("news-info")]/text()
-@replace(" / ", " ")
-@replace("\\.", "/")
-@wrap(<div>, id, "date")
-@datetime(+8): $@
-published_date
+@remove: $body//p[has-class("bzkeyword")]

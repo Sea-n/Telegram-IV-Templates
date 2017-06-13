@@ -37,6 +37,11 @@ published_date: //div[has-class("byline")]//time/text()
 author: //div[has-class("byline")]//a[@rel="author"]/text()
 
 author_url: //div[has-class("byline")]//a[@rel="author"]/@href
+author_url: //div[has-class("byline")]//a/@href
+
+@match("by ([^@]+)( \\(@.+\\))", 1): //div[has-class("title-left")]//div[has-class("byline")][contains(., "by")]
+author: $@
+@debug: $@
 
 <figure>: $body//div[has-class("slideshow")]/ol/li
 $pic: $@
@@ -56,17 +61,15 @@ $pic: $@
 <figcaption>: $@/following-sibling::p[1]/em
 @after_el("./../preceding-sibling::figure[1]/img"): $@
 
-
-
 <div>: $body//figure[has-class("graf-after--p")]
 
 @remove: $body//div[has-class("inset-ad")]
-@remove: $body//div[has-class("img-unit")]
-#@remove: $body//div[has-class("ad-cluster-container")]
 @remove: $body//a[has-class("event-after-article")]
 @remove: $body//div[has-class("social-share")]
 @remove: $body//div[has-class("social-flw")]
 @remove: $body//div[has-class("byline")]
 
 ?exists: //div[has-class("slides")]
+?exists: //div[has-class("island-thumb")]
+?exists: //a[has-class("channel-feed")]
 body!!: null

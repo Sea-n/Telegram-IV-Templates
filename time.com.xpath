@@ -15,14 +15,18 @@ published_date: //div[has-class("color-darker-gray")]
 
 <figure>: //div[has-class("vcB4uI1v")]
 <figcaption>: //div[@data-reactid="193"]
+<figcaption>: //figure//span/..
 
 cover: //figure[has-class("article-hero")]
 cover: //figure[has-class("vcB4uI1v")]
+cover: //figure[has-class("full")]
 
 @set_attr(src, @data-lazy-src): //img[@data-lazy-src]
+@set_attr(src, @data-src): //img[@data-src]
 
 @remove: $body//aside[has-class("right-rail__container--ad")]
 @remove: $body//div[has-class("dont-print")]
+@remove: $body//p[string-length(text()) = 0]/a[string-length(text()) = 0]/i/../..
 
 ?exists: //div[has-class("brightcove-wrapper")]
 body!!: null
