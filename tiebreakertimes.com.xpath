@@ -1,0 +1,31 @@
+title: //h1[has-class("entry-title")]
+
+body: //article[has-class("post")]
+
+author: //a[@rel="author"]/text()
+
+author_url: //a[@rel="author"]/@href
+
+<slideshow>: //ul[has-class("slides")]
+
+<div>: //p/em/strong/img/../../..
+
+@before_el("./.."): //div/em/strong/img
+<figcaption>: $@/next-sibling::strong
+<figure>: $@/..
+@remove: $@/next-sibling::br
+
+@before_el("./../.."): //div/em/strong/a/img
+<figcaption>: $@/next-sibling::strong
+<figure>: $@/..
+@remove: $@/next-sibling::br
+
+
+@remove: $body//header[has-class("entry-header")]
+@remove: $body//div[has-class("code-block")]
+@remove: $body//div[has-class("post-slider-nav")]
+@remove: $body//div[has-class("sharedaddy")]
+@remove: $body//p[string-length(text()) < 2][not(*)]
+@debug: $body//br
+
+#@debug: $body
