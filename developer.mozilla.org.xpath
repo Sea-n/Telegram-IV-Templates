@@ -4,20 +4,39 @@ body: //article[@id="wikiArticle"]
 
 published_date: //div[has-class("contributors-sub")]/time/@datetime
 
-#author: //div[has-class("contributors-sub")]/time/../a/text()
-#author_url: //div[has-class("contributors-sub")]/time/../a/@href
+# author: //div[has-class("contributors-sub")]/time/../a/text()
+# author_url: //div[has-class("contributors-sub")]/time/../a/@href
 
 @set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src, "https://www.youtube.com/embed/")]
 
-#<blockquote>: $body//p[has-class("summary")]
+# <blockquote>: $body//p[has-class("summary")]
 <blockquote>: $body//div[has-class("note")]
 <blockquote>: $body//div[has-class("notice")]
 
 <span>: $body//a[not(@href)]
 
+<p>: //ul[has-class("directory-tree")]
+dirtree: $@
+@before(<br>): $dirtree//li
+@remove: $dirtree/br[1]
+@prepend("　"): $dirtree//li//li
+@prepend("　"): $dirtree//li//li//li
+@prepend("　"): $dirtree//li//li//li//li
+@prepend("　"): $dirtree//li//li//li//li//li
+@prepend("　"): $dirtree//li//li//li//li//li//li
+
 @before(<br>): $body//dd
 @before(<br>): $body//dt
 
+@set_attr(data-language, @class): //pre[starts-with(@class, "brush: ")]
+@replace("^brush: ", ""): $@
+
+<div>: //table[has-class("standard-table")]
+<h3>: $@//th
+<p>: $@//td
+
+<div>: //table[not(*[2])]/tbody[not(*[2])]/tr/../..
+
+@remove: $body//div[has-class("prevnext")]
 @remove: $body//aside[@id="helpful-survey"]
 @remove: $body//div[has-class("htab")]
-@remove: $body//iframe[not(@Sean_Do_Not_Remove)]

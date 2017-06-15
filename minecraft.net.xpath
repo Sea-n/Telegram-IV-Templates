@@ -12,6 +12,10 @@ body: //div[has-class("kb-post-content")]
 
 cover: //img[has-class("article-head__image")]
 
+<iframe>: //div[has-class("youtube-player")]
+@set_attr(src, "https://www.youtube.com/embed/", @data-youtube-id): $@
+cover: //div[has-class("article-head__video-container")]//iframe[has-class("youtube-player")]
+
 author: //dl[has-class("article-attribution__dl")]/dd[1]/text()
 @replace(" \\-\\-$", ""): //h4[has-class("kb-posted-by")]//a/text()
 author: $@
@@ -28,30 +32,6 @@ published_date: //span[has-class("kb-post-date")]/text()
 <slideshow>: $body//div[has-class("article-image-carousel")]
 
 
-## iframe
-
-# youtube
-@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src,"http://www.youtube.com/embed/")]
-@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src,"https://www.youtube.com/embed/")]
-<iframe>: $body//div[has-class("youtube-player")]
-@set_attr(src, "https://www.youtube.com/embed/", @data-youtube-id)
-@set_attr(Sean_Do_Not_Remove, "true")
-
-# twitter-tweet
-@before(<iframe>, \
-  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
-  Sean_Do_Not_Remove, "true" \
-): $body//blockquote[has-class("twitter-tweet")]
-@remove
-
-# twitter-video
-@before(<iframe>, \
-  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
-  class, "twitter-video", \
-  Sean_Do_Not_Remove, "true" \
-): $body//blockquote[has-class("twitter-video")]
-@remove
-
 @remove: $body//div[has-class("article-category")]
 @remove: $body//div[has-class("article-paragraph--header")]
 @remove: $body//div[has-class("article-byline-container")]
@@ -60,4 +40,3 @@ published_date: //span[has-class("kb-post-date")]/text()
 @remove: $body//div[has-class("blog_post_info")]
 @remove: $body//div[has-class("nav_arrows")]
 @remove: $body//img[@src=""]
-@remove: $body//iframe[not(@Sean_Do_Not_Remove)]
