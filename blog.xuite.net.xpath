@@ -2,10 +2,8 @@ title: //span[has-class("titlename")]
 
 body: //div[@id="content_all"]
 
-$date: //span[has-class("titledate")]
-@replace("(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})", "$1/$2/$3 $4:$5"): $date
-@datetime(+8): $date
+@replace("(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})", "$1/$2/$3 $4:$5"): //span[has-class("titledate")]
+@datetime(+8): $@
 published_date: $@
 
-@unsupported: $body//iframe
-@remove: $body//iframe
+<div>: //table[not(*[2])]/tbody[not(*[2])]/tr[not(*[2])]/td/../../..

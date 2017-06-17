@@ -40,6 +40,7 @@ $linktxt: $body//p[string-length( text()) > 0]/a/img/..
 @before(<br>): $body//li//li
 @before("• "): $body//li//li
 
+<div>: //table[not(*[2])]/tbody[not(*[2])]/tr[not(*[2])]/td/../../..
 
 @remove: $body/p[text()="—"]
 @remove: $body/p[string-length( text()) < 2][not(*)]

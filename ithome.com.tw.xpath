@@ -1,21 +1,27 @@
 title: //div[has-class("main-container")]//header//h1[has-class("page-header")]
 
-description: //div[has-class("main-container")]//header//div[has-class("content-summary")]
+body: //div[has-class("field-name-body")]
 
 author: //span[has-class("author")]
 author_url: //span[has-class("author")]//a/@href
 
-image_url: //header//div[has-class("field-type-image")]//img/@src
+published_date: //span[has-class("created")]
+
+description: //div[has-class("main-container")]//header//div[has-class("content-summary")]
 
 <figure>: //div[has-class("img-wrapper")]
 <figcaption>: //p[has-class("caption")]
+cover: //header//figure
 
-@wrap(<figure>): //header//figure
-cover: $@
+image_url: $cover//img/@src
 
-body: //div[has-class("field-name-body")]
+<figure>: $body//p[contains(., "圖片來源")]/prev-sibling::p/img/..
+<figcaption>: $@/next-sibling::p[contains(., "圖片來源")]
+@after_el("./prev-sibling::figure/img")
 
-published_date: //span[has-class("created")]
+<figure>: $body//blockquote[contains(., "圖片來源")]/prev-sibling::p/img/..
+<figcaption>: $@/next-sibling::blockquote/p[contains(., "圖片來源")]
+@after_el("./../prev-sibling::figure/img")
 
 @remove: $body//p[string-length(text()) < 2][not(*)]
 

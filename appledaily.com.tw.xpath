@@ -1,17 +1,23 @@
 title: //article//header//h1[1]
 title: //article//h1[has-class("artmht")]
+title: //div[has-class("ncbox_cont")]//h1
+title: //header//h2
 
 #body: //article//p[@id="summary"]
 body: //article//div[has-class("articulum")]
 #body: //article//p[@id="bcontent"]
 body: //div[has-class("artmtx")]
+body: //div[has-class("nm-article-body")]
 
-@replace("(\\d+)年(\\d+)月(\\d+)日(\\d+:\\d+)?", "$1/$2/$3 $4"): //article//time
-@datetime(+8)
-published_date
+@replace("(\\d+)年(\\d+)月(\\d+)日", "$1/$2/$3 "): //article//time
+@datetime(+8): //article//time[contains(., ":")]
+published_date: $@
+published_date: //article//time[contains(., "/")]
+published_date: //article//time
+# @debug: //article//time
 published_date: //span[has-class("artmdt")]/i/text()   # fashion
 
-author: //head//meta[@property="og:site_name"]/@content
+author: ""   # remove URL
 
 cover: //article//div[@id="rt_headpic"]//figure
 @before_el("./../../../../div"): $cover//img
@@ -24,35 +30,64 @@ image_url: //article//figure[has-class("lbimg")][1]//img/@src
 image_url: $cover//img/@src
 
 
-@match("var playlist_array = \\[{url: '(https?://rtnvideo1.appledaily.com.tw/.*mp4)'}", 1): //div[@id="playerVideo"]//script[1]
+@match("var playlist_array = \\[{url: '(https?://rtnvideo1.appledaily.com.tw/.*mp4)'}", 1): //div[@id="playerVideo"]//script[contains(., "rtnvideo1.appledaily.com.tw")]
 video: $@
 @match("var videoUrl = '(https?://rtnvideo1.appledaily.com.tw/[^']*mp4)';", 1): //div[@id="videobox"]//script[3]
 video: $@
 @match("var videoUrl = '(https?://rtnvideo1.appledaily.com.tw/[^']*mp4)';", 1): //div[@id="rt_headpic"]//script[3]
 video: $@
+@match("var videoUrl = '(https?://rtnvideo1.appledaily.com.tw/[^']*mp4)';", 1): //article//script[contains(., "videoUrl")]
+video: $@
 <source>: $video
 @set_attrs("src", ., "type", "video/mp4")
 @wrap(<video>)
-@prepend_to($body): $@
+cover: $@
 
 @after(<br>): $body//span
 @append(<br>)
 
 $figure: //article//figure
-@before_el("./../../a"): $figure//img
+@remove: $figure//a/img
+<img>: $figure//a
+@set_attr(src, @href)
 @after_el("./../../img"): $figure//p
 <figcaption>: $figure//p
 <figcaption>: $figure//span[@id="caption"]
-@remove: $figure//a
-@remove: $figure//div[has-class("textbox")]
-#@append_to($body): $figure
+# @append_to($body): $figure
+# @debug: $figure
 
-@unsupported: $body//iframe
-@remove: $body//iframe
-@remove: $body//a
+<figure>: //div[has-class("news-img")]
+<figcaption>: //figure//p[has-class("video-caption")]
+
+@remove: $body//iframe[starts-with(@src, "//www.facebook.com/plugins")]
+@remove: $body//span/strong/a[@href="//www.facebook.com/appledaily.tw/"]/../..
+@remove: $body//a[contains(@href, "mailto")]
+@remove: $body//u/a[contains(@onclick, "RecommendLog")]/..
+@remove: $body//hr[has-class("clearman")]
 @remove: $body//span[@style="color:#FF0000;"]/strong/..   # 【想知道更多，一定要看……】
+@remove: $body//div[@id="goldenhorse"]
+@remove: $body//div[@id="textlink"]
+@remove: $body//div[@id="teadstv"]
+@remove: $body//div[has-class("artiswer")]
+@remove: $body//div[has-class("ads")]
+@remove: $body//section[@id="toolbar"]
+@remove: $body//img[contains(@src, "imgorg.appledaily.com.tw/appledaily/images/pen_icon.png")]
+@remove: $body//a/div[contains(., "更多速報")]/..
+<br>: $body//span[string-length(text()) = 0][not(*[not(self::br)])]
+@remove: $body//*[string-length(text()) = 0]/br/next-sibling::br/next-sibling::br
+@remove: $body/br/next-sibling::br/next-sibling::br
+# @remove: $body//*[string-length(text()) = 0]/br/../next-sibling::*[1][string-length(text()) = 0]/self::br
+# @remove: $body//p[string-length(text()) = 0][not(*[not(self::br)])]
+@remove: $body/*[last()]/self::br
+@remove: $body/*[last()]/self::br
+# @debug: $body/*[1]
+
+#@remove: $body//div[@id="realmore"]   # Typo
+#@remove: $body/*[last()]/self::br
+#@remove: $body/*[last()]/self::br
 #@remove: $body//div[@id="rt_headpic"]
 #@remove: $body//section[@id="toolbar"]
 #@remove: $body//div[has-class("shrs")]
 #@remove: $body//div[has-class("gggs")]
 #@remove: $body//div[has-class("clearmen")]
+# @debug: $body

@@ -12,10 +12,34 @@ cover: $@
 <figcaption>: //div[has-class("newsdetail")]/div[has-class("newsdetail-img-t")]/p
 @append_to($cover): $@
 
+
+<figure>: //div[has-class("newsdetail-img")]
+<figcaption>: //div[has-class("newsdetail-img-t")]/p
+@debug: $@
+
+@combine(", "): //div[has-class("newsdetail-peo")]//p/a
+author: $@
+author: //div[has-class("newsdetail-peo")]//p/a/text()
+author: //div[has-class("blog_header_R_titel1")]//a/text()
 author: ""
+
+
+author_url: //div[has-class("blog_header_R_titel1")]//a/@href
 
 <blockquote>: //div[has-class("newsdetail-label")]
 @prepend_to($body)
+
+<blockquote>: //div[has-class("newsdetail-aphorism")]
+
+
+@remove: $body//blockquote[has-class("newsdetail-aphorism")]//div[has-class("symbol-img1")]
+@remove: $body//blockquote[has-class("newsdetail-aphorism")]//div[has-class("symbol-img2")]
+@remove: $body//p[string-length(text()) < 2][not(*)]
+@remove: $body/p[last()]/img[contains(@src, "cc.tvbs.com.tw/img/upload/2017/01/25/20170125144919-90683d1d.jpg")]
+@remove: $body//p[string-length(text()) < 2][not(*)]
+@remove: $body/p[last()]/strong[contains(., "●本文為作者評論意見並授權刊登，不代表TVBS立場。")]
+@remove: $body//p[string-length(text()) < 2][not(*)]
+@debug: $body/p[last()]
 
 ?exists: //iframe[has-class("newsdetail-video")][not(contains(@src, "youtube.com"))]
 body!!: null

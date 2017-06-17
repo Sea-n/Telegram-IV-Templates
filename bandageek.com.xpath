@@ -25,3 +25,4 @@ author_url: //a[has-class("post-author-a")]/@href
 @remove: $body//section[has-class("post-author")]
 @remove: $body//section[has-class("next-prev-post")]
 @remove: $body/p[string-length( text()) < 2][not(*)]
+@remove: $body//div/div/b[contains(., "Mis medios de contacto")]/../../prev-sibling::*/following-sibling::*

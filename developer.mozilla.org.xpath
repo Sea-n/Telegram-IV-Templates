@@ -7,11 +7,12 @@ published_date: //div[has-class("contributors-sub")]/time/@datetime
 # author: //div[has-class("contributors-sub")]/time/../a/text()
 # author_url: //div[has-class("contributors-sub")]/time/../a/@href
 
-@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src, "https://www.youtube.com/embed/")]
-
 # <blockquote>: $body//p[has-class("summary")]
 <blockquote>: $body//div[has-class("note")]
 <blockquote>: $body//div[has-class("notice")]
+<blockquote>: $body//div[has-class("warning")]
+
+# <b>: $body//p[has-class("summary")]
 
 <span>: $body//a[not(@href)]
 
@@ -25,8 +26,14 @@ dirtree: $@
 @prepend("　"): $dirtree//li//li//li//li//li
 @prepend("　"): $dirtree//li//li//li//li//li//li
 
-@before(<br>): $body//dd
-@before(<br>): $body//dt
+# @before(<br>): $body//dd
+# @before(<br>): $body//dt
+<h4>: $body//dt
+
+<h4>: $body//ul[has-class("card-grid")]/li/span
+<div>: $body//ul[has-class("card-grid")]/li
+<div>: $body//ul[has-class("card-grid")]
+@debug: $body//ul[has-class("card-grid")]
 
 @set_attr(data-language, @class): //pre[starts-with(@class, "brush: ")]
 @replace("^brush: ", ""): $@

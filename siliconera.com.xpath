@@ -10,9 +10,16 @@ author_url: //p[has-class("writer")]//a[contains(@rel, "author")][not(@href="htt
 cover: $body//p[1]//iframe
 cover: $body//p[1]//img
 
+@replace("_thumb\\d*\\.", "."): //a[starts-with(@href, "http://www.siliconera.com/postgallery/")]/img[starts-with(@src, "http://www.siliconera.com/wordpress/wp-content/uploads/")]/@src
+@replace("_thumb\\d*\\.", "."): //p[@align="center"]/img[starts-with(@src, "http://www.siliconera.com/wordpress/wp-content/uploads/")]/@src
+<slideshow>: $body//p[string-length(text()) < 10][not(*[not(self::a)][not(self::img)])]/a[not(*[not(self::img)])]/img/../..
+
 <slideshow>: //div[@id="related_post"]//ul[has-class("related_post")]
 <figure>: $@//li
 @wrap(<figcaption>): $@//a[has-class("wp_rp_title")]
 
+<s>: //strike
+
+@remove: $body//img[@width < 10]
 @remove: $body//iframe[starts-with(@src, "http://www.siliconera.com/wordpress/wp-content/themes/siliconera/APIs/apientry.php")]
 @remove: $body/p[string-length(text()) < 2][not(*)]

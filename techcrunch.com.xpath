@@ -1,5 +1,6 @@
 title: //h1[has-class("tweet-title")]
 title: //div[has-class("page-title")]//h1
+title: //div[has-class("slide-content")]/h1
 title: //head//meta[@name="sailthru.title"]/@content
 title: //div[has-class("article-body")]/div[has-class("article-title")]/h1
 
@@ -8,6 +9,7 @@ body: //div[has-class("topic-entry")]
 body: //div[has-class("profile-text")]
 body: //div[has-class("textwidget")]
 body: //div[has-class("content-wrapper")]
+body: //div[has-class("slides")]
 body: //div[has-class("l-main-container")]
 
 @set_attr(src, @data-src): $body//img[@data-src]
@@ -22,6 +24,8 @@ cover: $body//div[has-class("vdb_player")]/iframe
 cover: //div[has-class("featured-image")]/img
 @background_to_image: //div[has-class("background-image-container")]
 cover: $@
+@background_to_image: //div[has-class("background-image")]
+cover: $@
 
 image_url: //img[has-class("profile-img")]/@src
 image_url: //head//meta[@property="og:image"]/@content
@@ -34,14 +38,18 @@ description: $body//p[1]
 published_date: //head//meta[@name="sailthru.date"]/@content
 published_date: //div[has-class("byline")]//time/text()
 
-author: //div[has-class("byline")]//a[@rel="author"]/text()
+author_url: //div[has-class("byline")][not(a[2])]//a[@rel="author"]/@href
+author_url: //div[has-class("byline")][not(a[2])]//span[has-class("twitter-handle")]//a/@href
+# author_url: //div[has-class("byline")][not(a[2])]//a/@href
 
-author_url: //div[has-class("byline")]//a[@rel="author"]/@href
-author_url: //div[has-class("byline")]//a/@href
+author: //div[has-class("byline")][not(a[2])]//a[@rel="author"]/text()
+@match("by (.*)", 1): //div[has-class("byline")][a[2]]
+author: $@
 
 @match("by ([^@]+)( \\(@.+\\))", 1): //div[has-class("title-left")]//div[has-class("byline")][contains(., "by")]
 author: $@
-@debug: $@
+# @debug: $@
+# @debug: $author
 
 <figure>: $body//div[has-class("slideshow")]/ol/li
 $pic: $@
@@ -68,8 +76,14 @@ $pic: $@
 @remove: $body//div[has-class("social-share")]
 @remove: $body//div[has-class("social-flw")]
 @remove: $body//div[has-class("byline")]
+@remove: $body//div[has-class("see-slideshow-prompt")]
+@remove: $body//div[has-class("view-options")]
+@remove: $body//div[has-class("slide-count")]
+@remove: $body//div[has-class("slide-last")]
+@remove: $body//div[has-class("slide-interstitial")]
 
-?exists: //div[has-class("slides")]
+# ?exists: //div[has-class("slides")]
 ?exists: //div[has-class("island-thumb")]
+?exists: //div[has-class("cb-container")]
 ?exists: //a[has-class("channel-feed")]
 body!!: null

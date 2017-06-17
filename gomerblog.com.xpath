@@ -6,15 +6,20 @@ author: //div[has-class("td-post-author-name")]/a/text()
 
 author_url: //div[has-class("td-post-author-name")]/a/@href
 
+cover: $body//p[1]/figure[has-class("aligncenter")]
+cover: $body//p[1]/img[has-class("aligncenter")]
 cover: $body//figure[has-class("alignright")]
 cover: $body//img[has-class("alignright")]
 
-@set_attr(src, @srcset): //img[@srcset]
+@set_attr(src, @srcset): //img[@srcset and @sizes and contains(@src, "x")]
+@replace(".+w,\\s([^\\s]+\\-[^\\sx-]+\\.[^\\s\\.]+)\\s.+", "$1"): $@
 @replace(".+w,\\s([^\\s]+)\\s\\d+w", "$1"): $@
+
 
 @replace("\\-\\d+x\\d+\\.", "."): //img[starts-with(@src, "http://gomerblog.wpengine.com/wp-content/uploads/")]/@src
 
 @after_el("./.."): //p/figure
+
 
 @remove: //div[has-class("textwidget")]
 @remove: //div[has-class("nc_socialPanel")]

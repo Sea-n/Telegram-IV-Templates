@@ -44,7 +44,7 @@ $aparat_video: $body//script[starts-with(@src, "https://www.aparat.com/embed/")]
 
 # instagram
 @before(<iframe>, \
-  src, ".//a[starts-with(@href, \"https://www.instagram.com/p/\")]/@href" \
+  src, ".//a[contains(@href, \"instagram.com/p/\")]/@href" \
 ): $body//blockquote[has-class("instagram-media")]
 @remove
 

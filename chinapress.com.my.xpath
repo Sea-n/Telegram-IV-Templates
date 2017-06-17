@@ -1,0 +1,21 @@
+title: //h1[has-class("entry-title")]
+
+body: //div[has-class("entry-content")]
+
+published_date: //time[has-class("published")]/@datetime
+
+author: ""
+
+@remove: $body/p[string-length( text()) < 2][not(*)]
+cover: $body/*[1]//iframe
+cover: $body[not(figure[2])]/*[1]/self::figure
+cover: $body[not(figure)]/*[1]//img
+
+<slideshow>: //ul[@id="post_gallery_ul"]
+<figure>: $@//li
+<figcaption>: $@//div[has-class("post_gallery_caption")]
+
+@unsupported: //div[contains(@id, "vt-video-player")]
+
+@remove: //div[has-class("like_post")]
+@remove: //div[has-class("post_gallery_thumbnail")]

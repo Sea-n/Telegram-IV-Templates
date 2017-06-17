@@ -1,0 +1,53 @@
+title: //h1[@itemprop="headline"]
+
+subtitle: //h2[@itemprop="alternativeHeadline"]
+
+body: //div[has-class("body-content")]
+body: //div[@itemprop="articlebody"]
+
+author: //a[@rel="author"]/text()
+
+author_url: //a[@rel="author"]/@href
+
+description: //head//meta[@name="description"]/@content
+
+<figure>: $body//div[has-class("wp-caption")]
+<figcaption>: $@/p[has-class("wp-caption-text")]
+
+@remove: //div[has-class("sharing_content_channel")]
+cover: $body/*[1]/self::img
+cover: $body/*[1 and self::h2]/img
+
+@before(<br>): $body//blockquote/p/next-sibling::*
+@before(<br>): $@
+@before(<br>): $body//blockquote//li/next-sibling::li
+@before(<br>): $body//blockquote//li
+@before("• "): $body//blockquote//li
+@remove: $body//blockquote//*[1]/self::br
+
+@before(<br>): $body//li//li
+@before("• "): $body//li//li
+
+<figure>: $body//p[string-length( text()) = 0]/a/img/../..
+@before_el("./.."): $@/a/img
+@wrap(<figcaption>): $@/../a
+$linkfig: $@
+@prepend("("): $linkfig/../..//figcaption
+@append("link"): $linkfig/..//figcaption/a
+@append(")"): $linkfig/../..//figcaption
+
+$linktxt: $body//p[string-length( text()) > 0]/a/img/..
+@prepend("("): $linktxt
+@append("link"): $linktxt
+@append(")"): $linktxt
+@append(<br>): $linktxt
+
+
+@remove: //div[has-class("about-author")]
+@remove: //div[has-class("related")]
+@remove: //div[contains(@class, "hidden-")]
+@remove: $body/*[last()]/self::br
+@remove: $body/*[last()]/self::hr
+
+<blockquote>: $body/*[last()]/self::p[not(*[2])]/em[contains(., "Some opinions expressed in this article may be those of a guest author and not necessarily Search Engine Land. Staff authors are listed")]
+@remove: $@/../prev-sibling::hr
