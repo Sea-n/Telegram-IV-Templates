@@ -1,6 +1,10 @@
 title: //header//h1[has-class("entry-title")]
+title: //div[@id="content"]//h2
+title: //h3[has-class("storytitle")]
 
 body: //article//div[has-class("entry-content")]
+body: //div[@id="content"]//div[has-class("entry")]
+body: //div[has-class("storycontent")]
 
 subtitle: $body/*[1]/i/..
 
@@ -13,6 +17,10 @@ author_url: //address[has-class("vcard")]/a[has-class("author")]/@href
 author_url: //cite[has-class("author")]/a/@href
 
 published_date: //time/@datetime
+@match("was posted on [A-Za-z]+day, (.+)\\s+and is", 1): //p[has-class("postmetadata")]/small[contains(., "posted on")]/text()
+@replace("at", ""): ($@)[1]
+@datetime: $@
+published_date: $@
 
 
 <figure>: //div[has-class("post-image-full")]
@@ -23,30 +31,46 @@ cover: //figure[has-class("post-image-full")]
 <figure>: //div[has-class("wp-caption")]
 <figcaption>: $@//p[has-class("wp-caption-text")]
 
-<figure>: $body//p[string-length( text()) = 0]/a/img/../..
+<figure>: $body//figure//a/img/../..
+@before_el("./.."): $@/a/img
+@wrap(<p>): $@/../a
+$linkfig: $@
+@append_to("./../figcaption"): $linkfig
+@prepend("("): $linkfig
+@prepend(<br>): $linkfig[string-length(./../text()) > 1]
+@append("link"): $linkfig/a
+@append(")"): $linkfig
+
+<figure>: $body//p[string-length(text()) = 0]/a/img/../..
 @before_el("./.."): $@/a/img
 @wrap(<figcaption>): $@/../a
-$linkfig: $@
-@prepend("("): $linkfig/../..//figcaption
-@append("link"): $linkfig/..//figcaption/a
-@append(")"): $linkfig/../..//figcaption
+$linkpho: $@
+@prepend("("): $linkpho
+@append("link"): $linkpho/a
+@append(")"): $linkpho
 
-$linktxt: $body//p[string-length( text()) > 0]/a/img/..
-@prepend("("): $linktxt
+$linktxt: $body//p[string-length(text()) > 0]/a/img/..
+@before("("): $linktxt
 @append("link"): $linktxt
-@append(")"): $linktxt
-@append(<br>): $linktxt
+@after(<br>): $linktxt
+@after(" of above photo)"): $linktxt
 
 @before(<br>): $body//li//li
-@before("• "): $body//li//li
+@before(<br>): $body//li//li
+@before("　○ "): $body//self::ul[not(../self::li)]/li/ul/li
+@before("　　● "): $body//self::ul[not(../self::li)]/li/ul/li/ul/li
+@before("　　　+ "): $body//self::ul[not(../self::li)]/li/ul/li/ul/li/ul/li
 
 <div>: //table[not(*[2])]/tbody[not(*[2])]/tr[not(*[2])]/td/../../..
 
 @remove: $body/p[text()="—"]
-@remove: $body/p[string-length( text()) < 2][not(*)]
+@remove: $body/p[string-length(text()) < 2][not(*)]
 @remove: $body/p/strong[starts-with(., "By ")]/a[starts-with(@href, "https://blog.mozilla.org/press/bios/")]/..
+@remove: $body//p[has-class("postmetadata")]
+@remove: $body//p/a[@rel="tag"]/..
+@remove: //video//object
 
-
+?exists: //ul[has-class("page-numbers")]
 ?exists: //article[2]
-title!!: null
+?exists: //span[has-class("datef")]
 body!!: null

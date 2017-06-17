@@ -1,0 +1,80 @@
+title: //h1[@itemprop="headline"]
+title: //article//h2/a/text()
+title: "NO TITLE"
+
+subtitle: //h1[@itemprop="headline"]/next-sibling::p
+
+body: //div[@itemprop="articleBody"]//div[@id="contenedor"]
+body: //div[has-class("contpost_post")]
+body: //div[@id="contenedor"]
+
+published_date: //div[@itemprop="datePublished"]/@datetime
+published_date: //abbr[has-class("published")]/@title
+
+author: //div[has-class("fecha")]/a/text()
+
+author_url: //div[has-class("fecha")]/a/@href
+
+# <video>: //meta[@property="og:video"]
+# cover
+# @set_attr(src, @content)
+cover: //section[@id="contenido-nota"]/figure
+
+<figcaption>: //figure//span[has-class("fuente_nota")]
+
+<figure>: //div[has-class("nota-media")]
+<figcaption>: $@/next-sibling::i
+@after_el("./prev-sibling::figure/img")
+
+<figure>: //div[has-class("galeria-caption")]
+<figcaption>: $@//p[has-class("bajada_fg")]
+
+<slideshow>: //div[has-class("jx-slider")]
+<figure>: $@//div[has-class("jx-image")]
+<figcaption>: $@//div[has-class("jx-label")]
+
+cover: //div[@id="ec-fotos"]//figure
+
+<figure>: //div[has-class("wp-caption")]
+<figcaption>: $@//p[has-class("wp-caption-text")]
+
+<figure>: $body//figure//a/img/../..
+@before_el("./.."): $@/a/img
+@wrap(<p>): $@/../a
+$linkfig: $@
+@append_to("./../figcaption"): $linkfig
+@prepend("("): $linkfig
+@prepend(<br>): $linkfig[string-length(./../text()) > 1]
+@append("link"): $linkfig/a
+@append(")"): $linkfig
+
+<figure>: $body//p[string-length(text()) = 0]/a/img/../..
+@before_el("./.."): $@/a/img
+@wrap(<figcaption>): $@/../a
+$linkpho: $@
+@prepend("("): $linkpho
+@append("link"): $linkpho/a
+@append(")"): $linkpho
+
+$linktxt: $body//p[string-length(text()) > 0]/a/img/..
+@before("("): $linktxt
+@append("link"): $linktxt
+@after(<br>): $linktxt
+@after(" of above photo)"): $linktxt
+
+@before(<br>): $body//li//li
+@before(<br>): $body//li//li
+@before("　○ "): $body//self::ul[not(../self::li)]/li/ul/li
+@before("　　● "): $body//self::ul[not(../self::li)]/li/ul/li/ul/li
+@before("　　　+ "): $body//self::ul[not(../self::li)]/li/ul/li/ul/li/ul/li
+
+
+@remove: $body//p/a/strong[text() = "MÁS NOTICIAS"]/../../prev-sibling::*/following-sibling::*
+@remove: $body//p[contains(., "Si no la necesitas, no la pidas. Controlemos el uso innecesario de los materiales de plástico")]/prev-sibling::*/following-sibling::*
+@remove: $body//p[text() = ".-"]/prev-sibling::*/following-sibling::*
+@remove: $body//p[text() = "-."]/prev-sibling::*/following-sibling::*
+@remove: //blockquote[has-class("embedly-card")]/prev-sibling::*/following-sibling::*
+
+
+@unsupported: //div[contains(@id, "ooyalaplayer")]
+@unsupported: //div[has-class("ooplayaPlayer")]

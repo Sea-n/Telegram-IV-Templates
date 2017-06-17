@@ -1,44 +1,132 @@
 title: //div[has-class("content")]//h1
 title: //div[@id="content"]//h1
+title: //div[has-class("Btitle")]
+title: //h2[has-class("page-name")]
+title: //div[has-class("title_box")]//h2
+title: //div[has-class("conbox")]//h2
+title: //div[has-class("content")]//h2
+
+body: //div[has-class("content")]//div[@id="newstext"]
+body: //div[has-class("content")]//div[has-class("news_p")]
+body: //div[has-class("detail")]
+body: //div[has-class("con")]
+body: //div[has-class("cont")]
+body: //div[has-class("context")]
+body: //div[has-class("news_content")]
+body: //div[@data-desc="內文"]
 
 image_url: //head//meta[@name="og:image"]/@content
 
 description: //head//meta[@name="description"]/@content[normalize-space()] 
 
-body: //div[has-class("content")]//div[@id="newstext"]
-body: //div[has-class("content")]//div[has-class("news_p")]
-body: //div[has-class("con")]
+@clone: //div[has-class("unit_else")]
+@match("(\\d{4})[/-](\\d\\d)[/-](\\d\\d)([^\\d]+(\\d\\d:\\d\\d))?"): //div[has-class("unit_else")][1]
+published_date: $@
+@match("[^\\d]*／.*"): //div[has-class("unit_else")][2]
+author: $@
 
-@replace("(\\d{4})-(\\d\\d)-(\\d\\d)..(\\d\\d:\\d\\d)", "$1/$2/$3 $4"): //div[@id="newstext"]/span
-@datetime(+8)
-published_date
+@replace("(\\d{4})-(\\d\\d)-(\\d\\d)([^\\d]+(\\d\\d:\\d\\d))?", ",,,,,,,,,,,,,,,,,,,, $1/$2/$3 $5"): //div[@id="newstext"]/span[contains(., "-")]
+@datetime(+8): $@
+published_date: $@
 @datetime(+8): //div[has-class("c_time")]
 published_date: $@
+@datetime(+8): //div[has-class("time")]
+published_date: $@
+@datetime(+8): //div[has-class("date")]
+published_date: $@
+@datetime(+8): //span[has-class("author")]/b[contains(., ":")]
+published_date: $@
+published_date: //span[has-class("author")]/b
+@datetime(+8): //span[has-class("writer")]/span[1]
+published_date: $@
+@datetime(+8): //div[has-class("writer")]/span[2]
+published_date: $@
+@datetime(+8): //div[has-class("con_writer")]/span[1]
+published_date: $@
+@datetime(+8): //div[has-class("writer_date")]
+published_date: $@
+@datetime(+8): //div[has-class("fb_like")]/b[contains(., ":")]
+published_date: $@
+published_date: //div[has-class("fb_like")]/b
+# published_date: "2017-1-1"
+
+author: //div[has-class("con_writer")]/span[2]
+author: $body/p[1][starts-with(., "◎ ")]
+author: //div[has-class("author")]/text()
+@replace(".*文／(記者)?([^／\\s]+).*", "$2"): $author
+@replace("^[^／]*／(記者)?([^／\\s]+).*", "$2"): $author
+@remove: $body/p[1][starts-with(., "◎ ")]
+@replace("◎\\s*", ""): $author
+author: //div[has-class("writer")]/a[@data-desc]/@data-desc
+author: ""
+
+author_url: //div[has-class("writer")]/a/@href
+
+@after_el("./.."): $body//p/iframe
+
+<figure>: //div[has-class("photo")]
+<figcaption>: $@//p
 
 <figure>: //div[has-class("pic600")]
 <figcaption>: $@//p
 
-@after_el("./../self::p"): $body//iframe
+# $pic: //ul[@id="newsphoto"]
+# <figure>: $pic/li/a
+# <figcaption>: $pic//p
+# @append_to($pic//figure): $pic//figcaption
+# @before_el("./../../.."): $pic//figure
 
-$pic: //ul[@id="newsphoto"]
-<figure>: $pic/li/a
-<figcaption>: $pic//p
-@append_to($pic//figure): $pic//figcaption
-@append_to($body): $pic//figure
-
-@set_attrs(width, 640, height, 360): //iframe
+$figa: $body//p/span/span[has-class("ph_b")]/span[has-class("ph_i")]/img/../..
+<figure>: $figa//span/img/..
+<figcaption>: $figa//span[has-class("ph_d")]
+@after_el("./prev-sibling::figure/img"): $figa//figcaption
+@before_el("./../../.."): $figa//figure
 
 <figure>: $body//p/span[has-class("ph_b")]/..
-$figure: $body//figure
-@before_el("./../../../span"): $figure//span/img
-<figcaption>: $figure//span[has-class("ph_d")]
-@after_el("./../../img"): $figure//figcaption
+$figph: $@
+@before_el("./../../../span"): $figph//span/img
+<figcaption>: $figph//span[has-class("ph_d")]
+@after_el("./../../img"): $figph//figcaption
 
+<slideshow>: $body//ul[@id="newsphoto"]
+<figure>: $@/li
+<figcaption>: $@/p
+
+<h4>: $body//dt
+
+cover: $body//figure[has-class("pic600")]
+
+@before("Step "): //div[has-class("stepbox")]/b
+
+@set_attrs(width, 640, height, 360): //iframe
+@set_attr(src, @data-original): //img[string-length(@data-original) > 10]
+
+@append_to($body): //div[has-class("page")][*[2]]
+@after("　"): $@/*
+
+@remove: //img[string-length(@src) < 5]
 @remove: $body//ul[@id="newsphoto"]
-@remove: $body//span
-@remove: $body//script
+@remove: $body//span[contains(., "/")][contains(., ":")]
+# @remove: $body//script
+@remove: //div[has-class("date")]
 @remove: $body//div[@id="newsad"]
+@remove: $body//div[has-class("photo-lightbox")]
+@remove: $body//div[has-class("fb_mask")]
+@remove: $body//div[has-class("fb_like")]
+@remove: $body//div[has-class("con_writer")]
+@remove: $body//div[has-class("author")]
+@remove: $body//div[has-class("guide")]
 @remove: $body//div[has-class("h3box")]   # sports
 @remove: $body//ul[has-class("boxTitle")]   # sports
-@remove: $body//div[has-class("boxTitle")]   # sports
-@remove: $body//img[@id="pv"]   # sports
+# @remove: $body//div[has-class("boxTitle")]
+@remove: $body//div[has-class("kwtab")]
+@remove: $body//div[has-class("share")]
+@remove: $body//div[has-class("add_fb")]
+@remove: $body//div[@data-desc="TOP"]
+@remove: $body//img[@id="pv"]
+@remove: $body//img[has-class("pv")]
+@remove: $body/p[@style="text-align: center;"][not(*[2])]/a[starts-with(@href, "http://3c.ltn.com.tw/news/")]
+@remove: $body//span[starts-with(., ",,,,,,,,,,,,,,,,,,,, ")]
+
+?exists: //div[@id="lot1"]
+body!!: null

@@ -2,16 +2,22 @@ title: //h1[has-class("post__title")]
 
 body: //article[has-class("post")]
 
+published_date: //abbr[has-class("published")]/@title
+
+@match(".*,.*"): //h3[has-class("post__author")]/a[2]/..
+author: $@
 author: //h3[has-class("post__author")]/a/text()
+@replace("\\s*\\[[^\\]]*\\]", ""): $author
 
 author_url: //h3[has-class("post__author")]/a/@href
 
-published_date: //abbr[has-class("published")]/@title
+<figure>: $body//div[has-class("wp-caption")]
+<figcaption>: $@/p[has-class("wp-caption-text")]
 
-@set_attr(Sean_Do_Not_Remove, "true"): $body//iframe[starts-with(@src, "https://www.youtube.com/embed/")]
+@set_attr(data-language, ./code/@class): //pre/code[@class]/..
+@set_attr(data-language, @class): //pre[@class]
 
-@prepend_to("./../../../.."): $body//table//pre
+@after_el("./../../../.."): $body//div[has-class("wp_syntax")]/table/tr/td[has-class("code")]/pre
+@remove: $body//div[has-class("wp_syntax")]
 
 @remove: $body//section[has-class("about")]
-@remove: $body//table
-@remove: $body//iframe[not(@Sean_Do_Not_Remove)]

@@ -15,8 +15,8 @@ description: //head//meta[@name="description"]/@content
 <figcaption>: $@/p[has-class("wp-caption-text")]
 
 @remove: //div[has-class("sharing_content_channel")]
-cover: $body/*[1]/self::img
-cover: $body/*[1 and self::h2]/img
+cover: $body/*[1]//self::img
+@remove: $body/*[1]//self::img
 
 @before(<br>): $body//blockquote/p/next-sibling::*
 @before(<br>): $@
@@ -27,6 +27,8 @@ cover: $body/*[1 and self::h2]/img
 
 @before(<br>): $body//li//li
 @before("• "): $body//li//li
+
+@debug: $body/*[1]
 
 <figure>: $body//p[string-length( text()) = 0]/a/img/../..
 @before_el("./.."): $@/a/img
@@ -51,3 +53,6 @@ $linktxt: $body//p[string-length( text()) > 0]/a/img/..
 
 <blockquote>: $body/*[last()]/self::p[not(*[2])]/em[contains(., "Some opinions expressed in this article may be those of a guest author and not necessarily Search Engine Land. Staff authors are listed")]
 @remove: $@/../prev-sibling::hr
+
+?exists: $body//form
+body!!: null

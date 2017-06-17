@@ -17,6 +17,8 @@ author_url: //a[has-class("post-author-a")]/@href
 
 <slideshow>: //div[has-class("fotorama")]
 
+@replace("^(http://)?//", "https://"): //iframe[contains(@src, "player.vimeo.com")]/@src
+
 @remove: $body//div[has-class("bs-irp")]
 @remove: $body//div[has-class("qrcode")]
 @remove: $body//div[has-class("applinks")]
