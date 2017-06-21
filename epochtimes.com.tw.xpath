@@ -6,6 +6,17 @@ cover: //figure[has-class("td-post-image-full")]
 
 published_date: //time[has-class("entry-date")]/@datetime
 
-@wrap(<figure>): //div[has-class("articleimage2")]
-@before_el("./.."): $@/a/img
-<figcaption>: //div[has-class("articleimage2")]
+author: //div[has-class("author_box")]
+author: //span[has-class("author_box_01")]
+@replace("文／", ""): $author
+@replace("【大紀元訊】", ""): $author
+@replace("【記者(.*)／(.*)報導】", "$1"): $author
+@replace("編譯", ""): $author
+@replace("【(.*)】", "$1"): $author
+
+@wrap(<figure>): //div[starts-with(@class, "articleimage")]
+@before_el("./.."): $@//img
+<figcaption>: //div[starts-with(@class, "articleimage")]
+
+@remove: //div[has-class("author_box")]
+@remove: //span[has-class("author_box_01")]

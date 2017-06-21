@@ -20,17 +20,26 @@ image_url: //head//meta[@name="og:image"]/@content
 description: //head//meta[@name="description"]/@content[normalize-space()] 
 
 @clone: //div[has-class("unit_else")]
-@match("(\\d{4})[/-](\\d\\d)[/-](\\d\\d)([^\\d]+(\\d\\d:\\d\\d))?"): //div[has-class("unit_else")][1]
+@clone: //div[has-class("unit_else")]
+@clone: //div[has-class("unit_else")]
+@match("(\\d{4})[/ -](\\d\\d)[/ -](\\d\\d)([^\\d]+(\\d\\d:\\d\\d))?"): //div[has-class("unit_else")][1][contains(., "/") or contains(., "-")]
 published_date: $@
-@match("[^\\d]*／.*"): //div[has-class("unit_else")][2]
+@match("[A-Za-z]+\\.\\s(\\d+)\\s(\\d+)"): //div[has-class("unit_else")][2]
+@replace("\\.", ""): $@
+published_date: $@
+@match("[^\\d]*／.*"): //div[has-class("unit_else")][3]
 author: $@
 
 @replace("(\\d{4})-(\\d\\d)-(\\d\\d)([^\\d]+(\\d\\d:\\d\\d))?", ",,,,,,,,,,,,,,,,,,,, $1/$2/$3 $5"): //div[@id="newstext"]/span[contains(., "-")]
 @datetime(+8): $@
 published_date: $@
+@datetime(+8): //h2/span
+published_date: $@
 @datetime(+8): //div[has-class("c_time")]
 published_date: $@
 @datetime(+8): //div[has-class("time")]
+published_date: $@
+@datetime(+8): //span[has-class("time")]
 published_date: $@
 @datetime(+8): //div[has-class("date")]
 published_date: $@
@@ -48,13 +57,19 @@ published_date: $@
 @datetime(+8): //div[has-class("fb_like")]/b[contains(., ":")]
 published_date: $@
 published_date: //div[has-class("fb_like")]/b
+published_date: //div[has-class("label-date")]
 # published_date: "2017-1-1"
 
 author: //div[has-class("con_writer")]/span[2]
 author: $body/p[1][starts-with(., "◎ ")]
 author: //div[has-class("author")]/text()
-@replace(".*文／(記者)?([^／\\s]+).*", "$2"): $author
-@replace("^[^／]*／(記者)?([^／\\s]+).*", "$2"): $author
+author: //p[has-class("auther")]
+author: //p[has-class("author")]/text()
+@combine(" "): //p[has-class("auther")]/span
+author: $@
+@replace(".*文[／/](記者)?([^／/\\s]+).*", "$2"): $author
+@replace("^[^／/]*／(記者)?([^／/\\s]+).*", "$2"): $author
+@replace("地產天下 ", ""): $author
 @remove: $body/p[1][starts-with(., "◎ ")]
 @replace("◎\\s*", ""): $author
 author: //div[has-class("writer")]/a[@data-desc]/@data-desc
@@ -69,6 +84,10 @@ author_url: //div[has-class("writer")]/a/@href
 
 <figure>: //div[has-class("pic600")]
 <figcaption>: $@//p
+<figcaption>: //figure[has-class("pic600")]//span
+
+<figure>: //div[@data-desc="圖"]
+<figcaption>: $@/p
 
 # $pic: //ul[@id="newsphoto"]
 # <figure>: $pic/li/a
@@ -92,9 +111,17 @@ $figph: $@
 <figure>: $@/li
 <figcaption>: $@/p
 
+<slideshow>: //div[has-class("photoleft")]
+@wrap(<figure>): $@/img
+<figcaption>: //slideshow[has-class("photoleft")]//p
+@after_el("./prev-sibling::figure/img")
+
 <h4>: $body//dt
 
 cover: $body//figure[has-class("pic600")]
+cover: //figure[has-class("photo1st")]
+
+@prepend_to($body): //slideshow[has-class("photoleft")]
 
 @before("Step "): //div[has-class("stepbox")]/b
 
@@ -123,10 +150,12 @@ cover: $body//figure[has-class("pic600")]
 @remove: $body//div[has-class("share")]
 @remove: $body//div[has-class("add_fb")]
 @remove: $body//div[@data-desc="TOP"]
+@remove: //h2/span
 @remove: $body//img[@id="pv"]
 @remove: $body//img[has-class("pv")]
 @remove: $body/p[@style="text-align: center;"][not(*[2])]/a[starts-with(@href, "http://3c.ltn.com.tw/news/")]
 @remove: $body//span[starts-with(., ",,,,,,,,,,,,,,,,,,,, ")]
 
 ?exists: //div[@id="lot1"]
+?exists: //a[@data-desc="回新聞"]
 body!!: null
