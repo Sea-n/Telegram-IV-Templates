@@ -9,13 +9,14 @@
 
 # twitter-tweet
 @before(<iframe>, \
-  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href" \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\") or contains(@href, \"/statuses/\")]/@href", \
+  class, "twitter-tweet" \
 ): $body//blockquote[has-class("twitter-tweet")]
 @remove
 
 # twitter-video
 @before(<iframe>, \
-  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\")]/@href", \
+  src, ".//a[starts-with(@href, \"https://twitter.com/\")][contains(@href, \"/status/\") or contains(@href, \"/statuses/\")]/@href", \
   class, "twitter-video" \
 ): $body//blockquote[has-class("twitter-video")]
 @remove
@@ -24,14 +25,14 @@
 $fb_post: $body//div[has-class("fb-post")][@data-href]
 @urlencode: $fb_post/@data-href
 @set_attr(data-src, "https://www.facebook.com/plugins/post.php?href=", @data-href, "&show_text=", @data-show-text, "&width=640"): $fb_post
-@before(<iframe>, src, @data-src): $fb_post
+@before(<iframe>, src, @data-src, class, "fb-post"): $fb_post
 @remove
 
 # facebook video
 $fb_video: $body//div[has-class("fb-video")][@data-href]
 @urlencode: $fb_video/@data-href
 @set_attr(data-src, "https://www.facebook.com/plugins/video.php?href=", @data-href, "&show_text=", @data-show-text, "&width=640"): $fb_video
-@before(<iframe>, src, @data-src): $fb_video
+@before(<iframe>, src, @data-src, class, "fb-video"): $fb_video
 @remove
 
 # aparat
@@ -39,12 +40,13 @@ $aparat_video: $body//script[starts-with(@src, "https://www.aparat.com/embed/")]
 @set_attr(data-hash, @src)
 @match("^https://www.aparat.com/embed/([^?]+)", 1): $@
 @set_attr(data-src, "https://www.aparat.com/video/video/embed/videohash/", @data-hash, "\\/vt/frame"): $aparat_video
-@before(<iframe>, src, @data-src): $aparat_video
+@before(<iframe>, src, @data-src, class, "aparat"): $aparat_video
 @remove
 
 # instagram
 @before(<iframe>, \
-  src, ".//a[contains(@href, \"instagram.com/p/\")]/@href" \
+  src, ".//a[contains(@href, \"instagram.com/p/\")]/@href", \
+  class, "instagram" \
 ): $body//blockquote[has-class("instagram-media")]
 @remove
 

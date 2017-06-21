@@ -1,0 +1,88 @@
+# This sample template explores how we can turn the Medium post on the left into a Telegram Instant View page as shown on the right — in several simple steps. If you're unsure what some of the elements used here do, check out the full documentation here: https://instantview.telegram.org/docs
+
+### STEP 1: Define which pages get Instant View and which don't
+
+# We only want to generate Instant View pages for articles. Other things, like lists of articles, profiles, the about section, etc. should be ignored.
+# Conveniently, all article pages on Medium seem to have a <meta property="article:published_time"> tag.
+# If this tag is not present, we'll assume that the page is not an article and does not require an Instant View page.
+# This *condition* does the trick:
+?exists: /html/head/meta[@property="article:published_time"]
+
+### STEP 2: Define the essential elements
+
+# The 'body' and 'title' *properties* are required for an Instant View page to work.
+# 'Subtitle' is optional for IV pages, but Medium posts can have subtitles, so it is essential that we reflect this in our template.
+body:     //article
+title:    $body//h1[1]
+subtitle: $title/next-sibling::h2
+
+### Now we'll set a cover image. It's also not required, but we need one if we want our Instant view page to look cool.
+
+# Some Medium posts have a cover image in the header background, we can use that.
+# First, let's assign the background node to the '$bg_section' *variable* for subsequent use.
+$bg_section: $body//section[has-class("is-imageBackgrounded")]
+# Call the @background_to_image *function* to convert the background image to an <img>
+@background_to_image: $bg_section//div[has-class("section-backgroundImage")]
+# Replace the //div tag with <figure> tags.
+<figure>: $bg_section//div[has-class("section-background")]
+# Set the figure as the value of the 'cover' *property*.
+cover: $bg_section//figure
+
+# If we didn't find a cover image, check a few other blocks that may contain it.
+# Note that 'cover:' is a *property*, so by default it will not be overwritten once we've assigned a value for the first time. This means that each of the following rules will only be applied if we don't have a cover yet.
+cover: $title/preceding::figure[.//img][not(has-class("is-partialWidth"))]
+cover: $title/next-sibling::figure[.//img]
+cover: $subtitle/next-sibling::figure[.//img]
+cover: //figure[has-class("graf--layoutFillWidth")]
+
+### Now to find an image for link previews. Links shared via Telegram will show an extended preview with a small picture in the chat. Let's try to find something for this image.
+
+# If we've already got a cover, we'll use it for the link preview image too.
+image_url: $cover/self::img/@src
+image_url: $cover/self::figure//img/@src
+
+# If we didn't find a cover, we'll take a picture from the meta tags.
+# Otherwise, the link preview will just have text in it, which is also OK.
+image_url: //head/meta[@property="og:image"]/@content
+
+### STEP 3: Further refinements
+
+# Pullquote in Medium contains a 'strong' tag, but this shouldn't make the whole quote bold.
+<span>:  //blockquote[has-class("graf--pullquote")]//strong
+<aside>: //blockquote[has-class("graf--pullquote")]
+
+# Now we'll inline embeds that are wrapped in additional frames using the '@inline' *function*.
+@inline: $body//iframe[starts-with(@src, "/media/")]
+
+# Medium shows preformatted blocks/blockquotes together if they are next to each other, we'll combine them using two breaks as a separator.
+@combine(<br>,<br>): $body//pre/next-sibling::pre
+@combine(<br>,<br>): $body//blockquote/next-sibling::blockquote
+
+# Medium articles can contain embedded link previews, we'll show such previews as blockquotes.
+$embed:           $body//div[has-class("graf--mixtapeEmbed")]
+@remove:          $embed//a[has-class("mixtapeImage")]
+$embed_link:      $embed/a
+@detach:          $embed_link/strong
+@before_el(./..): $embed_link/*
+@wrap(<cite>):    $embed_link
+<blockquote>:     $embed
+
+## STEP 4: Cleanup
+
+# Remove excessive nodes, we don't need them on the IV page.
+@remove: //article/header
+@remove: //article/footer
+@remove: $body//a[contains(@href,"/adServer.bs")]
+@remove: $body//p//*[has-class("graf-dropCap")]//img[has-class("graf-dropCapImage")]
+
+# Remove the first divider, it's invisible on Medium pages anyway.
+@remove: $body//section[1]//hr
+@remove: $body//section[has-class("section--first")]//hr
+@remove: $body//section[has-class("section--cover")]/following-sibling::*[1]/self::section//hr
+@remove: $body//section[has-class("is-backgrounded")]/following-sibling::*[1]/self::section//hr
+
+# Some pages use thin images as a divider. Telegram doesn't like thin images much, so we'll replace them with a simple divider.
+@before(<hr>): $body//figure[.//img[number(@data-height) < 30][(number(@data-width) > number(@data-height) * 30)]]
+@remove
+
+### And that's it, we're done. Now the rules from the '..after' block will be applied and the Instant View page is ready. Feel free to click on the panel below to see what exactly is done in the '..after' section.
