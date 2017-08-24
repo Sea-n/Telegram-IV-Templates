@@ -16,7 +16,8 @@ body: //div[has-class("l-main-container")]
 
 <iframe>: $body//div[has-class("vdb_player")]/script
 
-cover: $body/img
+@wrap(<figure>): $body/img
+cover: $@
 cover: //img[has-class("img-hero")]
 cover: $body/div[has-class("tc-topics-pages-company")]/img
 cover: //img[has-class("profile-img")]
@@ -48,8 +49,6 @@ author: $@
 
 @match("by ([^@]+)( \\(@.+\\))", 1): //div[has-class("title-left")]//div[has-class("byline")][contains(., "by")]
 author: $@
-# @debug: $@
-# @debug: $author
 
 <figure>: $body//div[has-class("slideshow")]/ol/li
 $pic: $@
@@ -71,6 +70,16 @@ $pic: $@
 
 <div>: $body//figure[has-class("graf-after--p")]
 
+<blockquote>: //div[has-class("aside-related-articles")]
+@append_to($body)
+<h4>: $@/h2
+@before_el("./.."): $@
+@before(<hr>): $@
+@after(<br>): $@/following-sibling::blockquote/a
+
+<figcaption>: $body[last()]/small
+@after_el($cover/img)
+
 @remove: $body//div[has-class("inset-ad")]
 @remove: $body//a[has-class("event-after-article")]
 @remove: $body//div[has-class("social-share")]
@@ -87,3 +96,4 @@ $pic: $@
 ?exists: //div[has-class("cb-container")]
 ?exists: //a[has-class("channel-feed")]
 body!!: null
+published_date!!: null
