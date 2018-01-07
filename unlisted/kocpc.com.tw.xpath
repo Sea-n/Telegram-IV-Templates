@@ -1,0 +1,13 @@
+?path: /archives/\d+
+
+title: //h1[@id="tc2sc-title"]/a/text()
+body: //div[@id="tc2sc-content"]
+author: //a[@rel="author"]
+author_url: "https://t.me/kocpc"
+
+<div>: $body//p/img/..
+@wrap(<slideshow>): $body//img[1]
+@after_el("./prev-sibling::slideshow/img"): $@/following-sibling::img
+
+@remove: //h4[@id="mayYouLike"]/prev-sibling::*/following-sibling::*
+@remove: $body//table   # ADs
