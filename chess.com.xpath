@@ -1,0 +1,94 @@
+# Lead Author: Maojui
+# Support: Sean
+# Quality Assurance: Sciuridae
+~version: "2.0"
+
+# Video Page
+title: //h1[@class="video-title"]
+body: //div[@class="video-desc"]
+
+# Normal Articles
+body:     //div[@class="post-view-content"]
+body: //article[has-class("post-view-content")]
+title:    //*[1 and self::h1]
+
+# With video
+@prepend_to($body): //meta[@property="og:video:url"]
+<video>: $@
+@set_attr(src, @content): $@
+
+
+# Published Date from JSON
+@json_to_xml :  //script[contains(., "datePublished")]
+published_date: $@/datePublished
+
+
+
+<figure>: //div[has-class("post-view-image")]
+<figcaption>: //small[has-class("post-view-caption")]
+@append_to("./prev-sibling::figure"): $@
+
+cover: //figure[has-class("post-view-image")]
+image_url: $cover/self::img/@src
+
+
+# Make all image get the source
+@set_attr(src, @data-src): //img[@data-src]
+
+@set_attr(src, @data-src): //iframe[starts-with(@data-src,"//www.youtube")]
+
+
+# Author
+author: //a[has-class("post-view-meta-username")]
+author_url: //a[has-class("post-view-meta-username")]/@href
+published_date://div[has-class("post-view-meta-stats")]/span/text()
+
+author: //a[has-class("username")]
+author_url: //a[has-class("username")]/@href
+published_date: //time
+
+
+# If <p> have no text, it maybe contains <img>
+<div>: $body/p[string-length(.) = 0]
+
+
+# Related Articles
+<related>: //div[has-class("post-view-more-component")]
+<h1>: $@/div[@class="post-view-more-author"]
+<span>: $@/a
+@append_to($body): //related
+
+
+# Informal Photo Caption
+<figure>: //p[@class="learn-board" and img]
+<figcaption>: $@/../next-sibling::div/em
+@append_to("./../prev-sibling::div//figure")
+
+<figure>: //div[ img[has-class("img-defer")] and not(text()) ]
+<figcaption>: $@/next-sibling::div[@style]/em
+@append_to("./../prev-sibling::figure"): $@
+
+<figcaption>: //figure//em
+
+
+# Take Image out, or it will be unsupported
+@before_el("./.."): //span/img
+@before_el("./.."): //span/img
+@before_el("./.."): //strong/img
+@before_el("./.."): //em/img
+@before_el("./.."): //p[string-length(text()) < 20]/img
+@before_el("./.."): //a/img
+@before_el("./.."): //p/iframe
+
+
+# Some img is inline emoji
+<pic>: //p//img[not(ends-with(@src, ".gif"))]
+
+
+# Custom dialog, currently not supported
+@unsupported: //div[has-class("chessDiagramDiv")]
+
+
+# Articles List should not have IV
+?exists: //article[5] # conflict with video
+body!!: null

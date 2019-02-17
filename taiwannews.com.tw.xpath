@@ -1,0 +1,82 @@
+# Lead Author: Andy Pan
+# Support: Sean
+~version: "2.0"
+
+?not_exists: //*[has-class("de_category-header")]
+
+$main: //div[@id="content"]
+$meta: $main//div[has-class("article-meta")]
+
+title: $main//header//h1[has-class("article-title")]
+subtitle: $main//header//*[has-class("subtilte")]
+body: $main//div[@id="main"]//article
+
+@after_el("./.."): //p/*[not(img)]//img
+
+$imgs: $body//img[@src]
+@wrap(<figcaption>): $imgs/following-sibling::*[not(self::br)]
+<figure>: $imgs/parent::*
+
+# XXX: slideshow is only built when > 2 elems?
+$cover_cands: $body//section[has-class("mod_article-slide")]
+$is_mul: $cover_cands//*[has-class("swiper-slide")][2]
+@if ($is_mul) {
+  <slideshow>: $cover_cands
+}
+@if_not($is_mul) {
+  cover: $cover_cands//figure
+}
+
+@datetime(8): $meta//div[has-class("article-date")]
+published_date: $@
+
+$author_link: $meta//div[has-class("article-author")]/a
+
+@remove: $meta//div[has-class("article-author")]//span[starts-with(text(), "By")]
+
+author: $author_link/text()
+author: $meta//div[has-class("article-author")]/text()
+author_url: $author_link/@href
+
+$related: //section[has-class("mod_related-list")]
+@prepend_to($$): $related/prev-sibling::*//h2
+
+# move iframes into figures
+@map ($body//iframe/../next-sibling::p[span]) {
+  $el: $@
+  <figcaption>
+  @append_to("./prev-sibling::p"): $@
+  <figure>: $@/parent::*
+}
+
+@after_el("./.."): //p/iframe
+@after_el("./.."): //p/figure
+
+# should be done AFTER normalizing
+
+@map ($body//figure/next-sibling::p[span]) {
+  $el: $@
+  <figcaption>
+  @append_to("./prev-sibling::figure"): $@
+}
+
+$tmp: $body//figure/next-sibling::*[contains(@style, "color")]
+
+@map ($tmp) {
+  $el: $@
+  <figcaption>
+  @append_to("./prev-sibling::figure"): $@
+}
+
+@map (//figure[not(figcaption)]) {
+  @if ($@/text()) {
+    @wrap(<figcaption>): $@
+  }
+}
+
+$rel2_tit: $body//h3[contains(.//text(), "相關新聞：")]
+@wrap(<related>): $rel2_tit
+@append_to($@): $@/following-sibling::*[a]
+
+<related>: $related
+@append_to($body)

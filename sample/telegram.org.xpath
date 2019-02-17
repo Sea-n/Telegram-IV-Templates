@@ -1,5 +1,8 @@
 # This sample template explores how we can turn the Telegram blog post on the left into an Instant View page as shown on the right — in several simple steps. If you're unsure what some of the elements used here do, check out the full documentation here: https://instantview.telegram.org/docs
 
+# Place the version at the beginning of template. We recommend always using the latest available version of Instant View.
+~version: "2.0"
+
 ### STEP 1: Define which pages get Instant View and which don't
 
 # That's easy because we only need IV pages for posts on the Telegram blog.
@@ -59,22 +62,9 @@ $footer: $body/p[./em[contains(., "The Telegram Team")]]
 
 ### Telegram blog posts have a 'Recent News' section at the bottom (on the right on desktops) that features earlier blog posts. We'll make some changes to this block so that it looks better on the IV page.
 
-# We'll store the 'Recent News' block in a variable and modify it:
-$side:         //div[has-class("tl_blog_bottom_blog")]
-# Transform the title into an <h4> heading and add a divider before it.
-<h4>:          $side//a[has-class("side_blog_header")]
-@before(<hr>)
-# Wrap the block in a blockquote.
-<blockquote>:  $side//div[has-class("side_blog_entries")]
-# Modify the structure of the post entries so that each has a bold date and the title is wrapped in a link
-$entries:      $side//a[has-class("side_blog_entry")]
-@wrap(<ent>):  $entries
-<strong>:      $side//*[has-class("side_blog_date")]
-@before_el("./..")
-@before(<br>): $entries
-# Now insert a double break between the post entries.
-@combine(<br>,<br>): $side//ent/next-sibling::ent
-# ...And the block is ready to be appended to the IV page body.
-@append_to($body): $side
+$related:  //div[has-class("tl_blog_bottom_blog")]
+<h4>:      $related//a[has-class("side_blog_header")]
+<related>: $related
+@append_to($body)
 
 ### And that's it, we're done. Now the rules from the '..after' block will be applied and the Instant View page is ready. Feel free to click on the panel below to see what exactly is done in the '..after' section.

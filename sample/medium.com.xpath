@@ -1,5 +1,8 @@
 # This sample template explores how we can turn the Medium post on the left into a Telegram Instant View page as shown on the right — in several simple steps. If you're unsure what some of the elements used here do, check out the full documentation here: https://instantview.telegram.org/docs
 
+# Place the version at the beginning of template. We recommend always using the latest available version of Instant View.
+~version: "2.0"
+
 ### STEP 1: Define which pages get Instant View and which don't
 
 # We only want to generate Instant View pages for articles. Other things, like lists of articles, profiles, the about section, etc. should be ignored.
@@ -74,6 +77,7 @@ $embed_link:      $embed/a
 @remove: //article/footer
 @remove: $body//a[contains(@href,"/adServer.bs")]
 @remove: $body//p//*[has-class("graf-dropCap")]//img[has-class("graf-dropCapImage")]
+@remove: $body//*[has-class("js-postMetaLockup")][.//a[@data-action="show-user-card"]]
 
 # Remove the first divider, it's invisible on Medium pages anyway.
 @remove: $body//section[1]//hr

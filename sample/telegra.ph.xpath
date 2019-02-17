@@ -1,8 +1,11 @@
 # This sample template explores how we can turn the Telegraph post on the left into an Instant View page as shown on the right — in several simple steps. If you're unsure what some of the elements used here do, check out the full documentation here: https://instantview.telegram.org/docs
 
+# Place the version at the beginning of template. We recommend always using the latest available version of Instant View.
+~version: "2.0"
+
 ### STEP 1: Define which pages get Instant View and which don't
 
-# All pages on telegra.ph are articles, with one exception: the main page is blank and lets you create new articles.
+# All pages on telegra.ph are articles, with one exception: the main page is blank and lets you create new articles.
 # This *condition* tells our Instant View bot to apply rules to all pages except the root page, telegra.ph/
 ?path: /.+
 
