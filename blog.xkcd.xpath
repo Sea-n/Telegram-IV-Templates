@@ -1,0 +1,35 @@
+~version: "2.0"
+
+?domain: blog.xkcd.com/
+# Only generate an IV for actual blog entries, not for lists of multiple articles
+?path: /\d+/\d+/\d+/[\w-]+.*
+
+# Fancy math formatting that IV doesn't support currently.
+@unsupported: //img[has-class("inlineformula")]
+
+$body:    //article
+
+title:          $body//h1
+author:         $body//span[has-class("author")]//a
+author_url:     $author/@href
+published_date: $body//time[has-class("entry-date")]/@datetime
+
+@remove: $body//div[has-class("entry-meta")]
+@remove: $body//div[has-class("sharedaddy")]
+@remove: $body//footer
+
+image_url: $body//img/@src
+image_url: ""
+
+<div>: //p[.//img]
+
+# Convert <a href><img/></a> to <img href/>
+@set_attr("src", ./img/@src): $body//a[./img]
+<img>: $body//a[./img]
+@remove: $body//img/img
+
+# IV's blockquote only supports <pic>s, not <img>
+<pic>: //blockquote//img
+
+# Combine paragrahps in blockquotes, the result looks more like the formatting on the original page
+@combine(<br>): //blockquote/p/next-sibling::p
